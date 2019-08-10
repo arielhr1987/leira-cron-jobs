@@ -1,0 +1,64 @@
+table.cron-jobs {
+
+  th, td {
+    &.column-title,
+    &.column-action {
+      //width: 25%;
+      @media screen and (max-width: 782px) {
+        //width: 100%;
+      }
+    }
+
+    &.column-schedule {
+      //width: 15%;
+    }
+
+    &.column-time {
+      //width: 15%;
+    }
+  }
+
+  td {
+
+    &.column-title strong {
+      display: block;
+      margin-bottom: .2em;
+      font-size: 14px;
+      //font-weight: 400;
+      //word-wrap: normal;
+    }
+  }
+}
+
+@media screen and (max-width: 782px) {
+  #wpbody-content .inline-edit-row-cron-job,
+  #wpbody-content .inline-edit-row-page {
+    .inline-edit-col-right {
+      margin-top: 0;
+    }
+  }
+}
+
+#wpbody-content .inline-edit-row-cron-job {
+  .inline-edit-col-left {
+    width: 50%;
+  }
+
+  .inline-edit-col-right {
+    margin-top: 27px;
+    width: 49%;
+  }
+}
+
+#jj,
+#hh,
+#mn {
+  font-size: 12px;
+  width: 2.3em;
+  padding: 3px 5px;
+}
+
+#aa {
+  font-size: 12px;
+  padding: 3px 5px;
+}

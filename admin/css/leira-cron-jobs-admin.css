@@ -1,0 +1,27 @@
+table.cron-jobs td.column-title strong {
+  display: block;
+  margin-bottom: .2em;
+  font-size: 14px; }
+
+@media screen and (max-width: 782px) {
+  #wpbody-content .inline-edit-row-cron-job .inline-edit-col-right,
+  #wpbody-content .inline-edit-row-page .inline-edit-col-right {
+    margin-top: 0; } }
+#wpbody-content .inline-edit-row-cron-job .inline-edit-col-left {
+  width: 50%; }
+#wpbody-content .inline-edit-row-cron-job .inline-edit-col-right {
+  margin-top: 27px;
+  width: 49%; }
+
+#jj,
+#hh,
+#mn {
+  font-size: 12px;
+  width: 2.3em;
+  padding: 3px 5px; }
+
+#aa {
+  font-size: 12px;
+  padding: 3px 5px; }
+
+/*# sourceMappingURL=leira-cron-jobs-admin.css.map */
