@@ -109,7 +109,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 		$actions = array(
 			'run'                  => sprintf( '<a href="%s" class="">%s</a>',
 				add_query_arg( array(
-					'page'     => isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : 'leira-cron-jobs',
+					'page'     => 'leira-cron-jobs',
 					'action'   => 'run',
 					$job_key   => $item['md5'],
 					'_wpnonce' => wp_create_nonce( 'bulk-cron-jobs' )
@@ -123,7 +123,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 			),
 			'delete'               => sprintf( '<a href="%s" class="">%s</a>',
 				add_query_arg( array(
-					'page'     => isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : 'leira-cron-jobs',
+					'page'     => 'leira-cron-jobs',
 					'action'   => 'delete',
 					$job_key   => $item['md5'],
 					'_wpnonce' => wp_create_nonce( 'bulk-cron-jobs' )
@@ -465,8 +465,8 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 		 * This checks for sorting input and sorts the data in our array accordingly.
 		 */
 		function usort_reorder( $a, $b ) {
-			$orderby = ( ! empty( $_REQUEST['orderby'] ) ) ? $_REQUEST['orderby'] : 'event'; //If no sort, default to title
-			$order   = ( ! empty( $_REQUEST['order'] ) ) ? $_REQUEST['order'] : 'asc'; //If no order, default to asc
+			$orderby = ( ! empty( $_REQUEST['orderby'] ) ) ? sanitize_text_field( $_REQUEST['orderby'] ) : 'event'; //If no sort, default to title
+			$order   = ( ! empty( $_REQUEST['order'] ) ) ? sanitize_text_field( $_REQUEST['order'] ) : 'asc'; //If no order, default to asc
 
 			//$result = strcmp( $a[ $orderby ], $b[ $orderby ] ); //Determine sort order, case sensitive
 			$result = strcasecmp( $a[ $orderby ], $b[ $orderby ] ); //Determine sort order, case insensitive

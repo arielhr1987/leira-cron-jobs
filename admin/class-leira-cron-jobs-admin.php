@@ -383,6 +383,7 @@ class Leira_Cron_Jobs_Admin{
 				wp_die( $out );
 			}
 			$request_value = $_REQUEST[ $key ];
+			$request_value = sanitize_text_field( $request_value );
 			if ( in_array( $key, array( 'mm', 'jj', 'hh', 'mn', 'ss' ) ) ) {
 				//add leading zeros to date time fields
 				$request_value = str_pad( $request_value, 2, "0", STR_PAD_LEFT );
@@ -431,6 +432,7 @@ class Leira_Cron_Jobs_Admin{
 		/** @var Leira_Cron_Jobs_Manager $manager */
 		$manager = Leira_Cron_Jobs::instance()->get_loader()->get( 'manager' );
 		$args    = isset( $_REQUEST['args'] ) ? $_REQUEST['args'] : '';
+		$args    = sanitize_text_field( $args );
 		$args    = @json_decode( $args, true );
 		if ( ! is_array( $args ) ) {
 			$args = array();
