@@ -13,7 +13,7 @@ Manage easily your wordpress cron jobs.
 
 == Description ==
 
-Cron Jobs is a simple, but powerful plugin that will help you to manage you site cron jobs easily.
+Cron Jobs is a simple, but powerful plugin that will help you to manage your site cron jobs easily.
 
 We provide basic actions to manage cron jobs. New features are plan to be available soon
 
@@ -30,10 +30,10 @@ This section describes how to install the plugin and get it working.
 
 e.g.
 
-1. Upload the plugin files to the `/wp-content/plugins/plugin-name` directory, or install the plugin through the WordPress plugins screen directly.
-1. Activate the plugin through the 'Plugins' screen in WordPress
-1. Use the Settings->Plugin Name screen to configure the plugin
-1. (Make your instructions match the desired user flow for activating and installing your plugin. Include any steps that might be needed for explanatory purposes)
+1. Upload the plugin files to the `/wp-content/plugins/leira-cron-jobs` directory, or install the plugin through the WordPress plugins screen directly.
+2. Activate the plugin through the 'Plugins' screen in WordPress
+3. Use the Settings->Plugin Name screen to configure the plugin
+4. Happy coding :)
 
 == Frequently Asked Questions ==
 

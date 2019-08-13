@@ -245,7 +245,7 @@ class Leira_Cron_Jobs_Admin{
 			'<p><strong>' . __( 'For more information:', 'leira-cron-jobs' ) . '</strong></p>' .
 			'<p>' . __( '<a href="https://developer.wordpress.org/plugins/cron/">Documentation on Crons</a>', 'leira-cron-jobs' ) . '</p>' .
 			'<p>' . __( '<a href="https://wordpress.org/support/">Support</a>', 'leira-cron-jobs' ) . '</p>' . //TODO: Change to github plugin page
-			'<p>' . __( '<a href="https://wordpress.org/support/">Report an issue</a>', 'leira-cron-jobs' ) . '</p>' //TODO: Change to github plugin page
+			'<p>' . __( '<a href="https://github.com/arielhr1987/leira-cron-jobs/issues">Report an issue</a>', 'leira-cron-jobs' ) . '</p>'
 		);
 
 		get_current_screen()->set_screen_reader_content(

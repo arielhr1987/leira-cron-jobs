@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       Cron Jobs
  * Plugin URI:        leira-cron-jobs
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       Cron Jobs is a simple, but powerful plugin that will help you to manage your site cron jobs easily.
  * Version:           1.0.0
  * Author:            Ariel
  * Author URI:        https://github.com/arielhr1987
