@@ -2,8 +2,8 @@
 Contributors: arielhr1987, jlcd0894
 Donate link: https://github.com/arielhr1987
 Tags: cron, jobs, cron jobs, schedule, event
-Requires at least: 4.0
-Tested up to: 4.8
+Requires at least: 4.1
+Tested up to: 5.2.2
 Stable tag: 1.0.0
 Requires PHP: 5.4
 License: GPLv2 or later
