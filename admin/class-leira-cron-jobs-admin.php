@@ -330,7 +330,8 @@ class Leira_Cron_Jobs_Admin{
 		} else {
 			if ( isset( $_REQUEST['action'] ) ) {
 				//if we click "Apply" button
-				$this->enqueue_message( 'warning', __( 'Please select a bulk action to execute', 'leira-cron-jobs' ) );
+				//TODO: This message is show if we search for cron jobs. Show it only if we hit Apply
+				//$this->enqueue_message( 'warning', __( 'Please select a bulk action to execute', 'leira-cron-jobs' ) );
 			}
 		}
 	}
