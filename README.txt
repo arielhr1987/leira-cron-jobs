@@ -1,7 +1,7 @@
 === Cron Jobs ===
 Contributors: arielhr1987, jlcd0894
 Donate link: https://github.com/arielhr1987
-Tags: cron, jobs, cron jobs, schedule, event
+Tags: cron, jobs, cron jobs, schedule, event, wp-cron, wp cron
 Requires at least: 4.1
 Tested up to: 5.2.2
 Stable tag: 1.1.0
