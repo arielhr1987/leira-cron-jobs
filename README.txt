@@ -51,7 +51,15 @@ No. At the moment you won't be able to manage schedules, but we plan to have tha
 
 
 == Screenshots ==
-
+1. You will find a new menu item "Cron Jobs" under "Tools" menu
+2. List of all available cron jobs
+3. Quick edit any cron job. You will be able to edit cron "arguments", "schedules" and "next run"
+4. Bulk actions for selected cron jobs
+5. Customize your page in the "Screen Options" section
+6. Quick information about Wordpress cron jobs
+7. Information about "Screen Options" customization
+8. Status of your Wordpress installation constants
+9. Search for cron jobs
 
 == Changelog ==
 
