@@ -140,7 +140,7 @@ class Leira_Cron_Jobs_Admin{
 			//the cron job table instance
 			$table = $this->get_list_table();
 			$table->prepare_items();
-
+			$this->admin_notices();
 			?>
             <hr class="wp-header-end">
             <h2 class="screen-reader-text"><?php _e( 'Filter cron jobs list', 'leira-cron-jobs' ) ?></h2>
@@ -169,6 +169,11 @@ class Leira_Cron_Jobs_Admin{
 			wp_die( __( 'You do not have sufficient permissions to access this page.', 'leira-cron-jobs' ) );
 		}
 
+		//ensure session is started. Its used for user notifications
+		if ( session_status() !== PHP_SESSION_ACTIVE ) {
+			session_start();
+		}
+
 		//enqueue styles
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/leira-cron-jobs-admin.css', array(), $this->version, 'all' );
 
@@ -177,8 +182,6 @@ class Leira_Cron_Jobs_Admin{
 			'jquery',
 			'wp-a11y'
 		), $this->version, false );
-
-		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 
 		//initialize table here to be able to register default WP_List_Table screen options
 		$this->get_list_table();
@@ -313,7 +316,7 @@ class Leira_Cron_Jobs_Admin{
 				switch ( $action ) {
 					case 'run':
 						$manager->bulk_run( $jobs );
-						$this->enqueue_message( 'success', __( 'The selected cron jobs are being executed in this moment', 'leira-cron-jobs' ) );
+						$this->enqueue_message( 'success', __( 'The selected cron jobs are being executed at this moment', 'leira-cron-jobs' ) );
 						wp_safe_redirect( $redirect );
 						die();
 						break;
@@ -328,6 +331,7 @@ class Leira_Cron_Jobs_Admin{
 				}
 			}
 		} else {
+
 			if ( isset( $_REQUEST['action'] ) ) {
 				//if we click "Apply" button
 				//TODO: This message is show if we search for cron jobs. Show it only if we hit Apply
@@ -469,19 +473,17 @@ class Leira_Cron_Jobs_Admin{
 	 * @param $text
 	 */
 	protected function enqueue_message( $type, $text ) {
-		update_option( 'leira-cron-jobs-flash-message', array(
-			$type => $text
-		) );
+		$_SESSION['leira-cron-jobs-flash-message'] = array( $type => $text );
 	}
 
 	/**
 	 * Display admin flash notices
 	 */
 	public function admin_notices() {
-		$messages = get_option( 'leira-cron-jobs-flash-message', array() );
+		$messages = isset( $_SESSION['leira-cron-jobs-flash-message'] ) ? $_SESSION['leira-cron-jobs-flash-message'] : array();
 		foreach ( $messages as $type => $text ) {
 			echo sprintf( '<div class="notice notice-%s is-dismissible"><p>%s</p></div>', $type, $text );
 		}
-		update_option( 'leira-cron-jobs-flash-message', array() );
+		$_SESSION['leira-cron-jobs-flash-message'] = array();
 	}
 }

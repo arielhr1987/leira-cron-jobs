@@ -37,24 +37,32 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 	}
 
 	/**
+	 * Get a list of CSS classes for the WP_List_Table table tag.
+	 * @return array List of CSS classes for the table tag.
+	 */
+	protected function get_table_classes() {
+		return array( 'widefat', 'fixed', /*'striped',*/ $this->_args['plural'] );
+	}
+
+	/**
 	 * @param array $item .
 	 */
 	public function single_row( $item ) {
-		$class = '';
+		$class = array( 'cron-job-tr' );
 
 		if ( ( $item['time'] - time() ) <= 0 ) {
-			$class = 'active'; //running
+			$class[] = 'active'; //running
 		}
 
 		if ( $item['action'] === false ) {
-			$class = 'orphan';
+			$class[] = 'orphan';
 		}
 		$job_key = sprintf( 'cron-job-%s', md5( implode( '_', array(
 			$item['time'],
 			$item['event'],
 			$item['md5']
 		) ) ) );
-		echo sprintf( '<tr id="%s" class="%s">', $job_key, $class );
+		echo sprintf( '<tr id="%s" class="%s">', $job_key, implode( ' ', $class ) );
 		$this->single_row_columns( $item );
 		echo '</tr>';
 	}
@@ -107,30 +115,40 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 		//Build row actions
 		$job_key = 'job[' . $item['time'] . '][' . $item['event'] . ']';
 		$actions = array(
-			'run'                  => sprintf( '<a href="%s" class="">%s</a>',
-				add_query_arg( array(
-					'page'     => 'leira-cron-jobs',
-					'action'   => 'run',
-					$job_key   => $item['md5'],
-					'_wpnonce' => wp_create_nonce( 'bulk-cron-jobs' )
-				), admin_url( 'tools.php' ) ),
-				__( 'Run now', 'leira-cron-jobs' )
-			),
-			'inline hide-if-no-js' => sprintf(
-				'<button type="button" class="button-link editinline" aria-label="%s" aria-expanded="false">%s</button>',
-				esc_attr( sprintf( __( 'Quick edit &#8220;%s&#8221; inline', 'leira-cron-jobs' ), $item['event'] ) ),
-				__( 'Quick&nbsp;Edit', 'leira-cron-jobs' )
-			),
-			'delete'               => sprintf( '<a href="%s" class="">%s</a>',
+			'delete' => sprintf( '<a href="%s" class="" onclick="return confirm(\'%s\')">%s</a>',
 				add_query_arg( array(
 					'page'     => 'leira-cron-jobs',
 					'action'   => 'delete',
 					$job_key   => $item['md5'],
 					'_wpnonce' => wp_create_nonce( 'bulk-cron-jobs' )
 				), admin_url( 'tools.php' ) ),
+				__( 'Are you sure you want to delete this cron job?', 'leira-cron-jobs' ),
 				__( 'Delete', 'leira-cron-jobs' )
 			),
 		);
+
+		/**
+		 * We can't run or edit a cron job with missing action
+		 */
+		if ( ! empty( $item['action'] ) ) {
+
+			$actions = array_merge( array(
+				'run'                  => sprintf( '<a href="%s" class="">%s</a>',
+					add_query_arg( array(
+						'page'     => 'leira-cron-jobs',
+						'action'   => 'run',
+						$job_key   => $item['md5'],
+						'_wpnonce' => wp_create_nonce( 'bulk-cron-jobs' )
+					), admin_url( 'tools.php' ) ),
+					__( 'Run now', 'leira-cron-jobs' )
+				),
+				'inline hide-if-no-js' => sprintf(
+					'<button type="button" class="button-link editinline" aria-label="%s" aria-expanded="false">%s</button>',
+					esc_attr( sprintf( __( 'Quick edit &#8220;%s&#8221; inline', 'leira-cron-jobs' ), $item['event'] ) ),
+					__( 'Quick&nbsp;Edit', 'leira-cron-jobs' )
+				)
+			), $actions );
+		}
 
 		return $column_name === $primary ? $this->row_actions( $actions, false ) : '';
 	}

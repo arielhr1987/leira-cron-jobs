@@ -163,22 +163,62 @@ class Leira_Cron_Jobs_Manager{
 		$crons = _get_cron_array();
 
 		delete_transient( 'doing_cron' );
-		foreach ( $jobs as $time => $job ) {
+		foreach ( $jobs as $timestamp => $job ) {
 			$job = (array) $job; //Avoid warning "Invalid argument supplied for foreach()"
-			foreach ( $job as $name => $md5 ) {
-				if ( isset( $crons[ $time ][ $name ][ $md5 ] ) ) {
-					$args = $crons[ $time ][ $name ][ $md5 ]['args'];
-					wp_schedule_single_event( time() - 1, $name, $args );
+			foreach ( $job as $event => $md5 ) {
+				if ( isset( $crons[ $timestamp ][ $event ][ $md5 ] ) ) {
+					$args = $crons[ $timestamp ][ $event ][ $md5 ]['args'];
+					/**
+					 * Wordpress will not schedule an event if the execution time is withing the next 10 minutes.
+					 * We have some other ways to "run" the cron job
+					 *
+					 * 1- Use do_action_ref_array method to call the action directly.
+					 *    The problem with this implementation is that long running actions will slowdown the page load.
+					 *    NOT A GOOD IDEA
+					 *
+					 * 2- Schedule a single event that points to an action actually triggers the cron job.
+					 *
+					 * 3- Schedule a single event using wp_schedule_single_event. If you want to run an event that
+					 *    is about to be executed in the next 10 minutes Wordpress will NOT schedule that event
+					 *
+					 * 4- If the event is about to be executed in the next 10 minutes, them reschedule the event for now
+					 *
+					 * 5- schedule a single event without using wp_schedule_single_event function and avoid the 10 minutes error
+					 *
+					 * 6- Simple reschedule the event
+					 */
+
+					//we are using approach 5
+					$event = apply_filters( 'schedule_event', $event );
+
+					// A plugin disallowed this event
+					if ( ! $event ) {
+						continue;
+					}
+
+					$crons[ time() - 1 ][ $event ][ $md5 ] = array(
+						'schedule' => false, //single run
+						'args'     => $args,
+					);
 				}
 			}
 		}
+		/**
+		 * Sort the array
+		 */
+		uksort( $crons, 'strnatcasecmp' );
+
+		/**
+		 * Add new events to the cron schedule array
+		 */
+		$res = _set_cron_array( $crons );
+
+		/**
+		 * Trigger cron jobs
+		 */
 		spawn_cron();
 
-		//With this we make sure that we dont have duplicated cron when we show the table.
-		//However, long running scripts will be visible if the user refresh the page
-		_set_cron_array( $crons );
-
-		return true;
+		return $res;
 	}
 
 	/**

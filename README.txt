@@ -4,7 +4,7 @@ Donate link: https://github.com/arielhr1987
 Tags: cron, jobs, cron jobs, schedule, event
 Requires at least: 4.1
 Tested up to: 5.2.2
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 Requires PHP: 5.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -51,15 +51,16 @@ No. At the moment you won't be able to manage schedules, but we plan to have tha
 
 
 == Screenshots ==
-1. You will find a new menu item "Cron Jobs" under "Tools" menu
-2. List of all available cron jobs
-3. Quick edit any cron job. You will be able to edit cron "arguments", "schedules" and "next run"
-4. Bulk actions for selected cron jobs
-5. Customize your page in the "Screen Options" section
-6. Quick information about Wordpress cron jobs
-7. Information about "Screen Options" customization
-8. Status of your Wordpress installation constants
-9. Search for cron jobs
+1. You will find a new menu item "Cron Jobs" under "Tools" menu.
+2. List of all available cron jobs. Cron jobs without action will be marked in red.
+3. Quick edit any cron job. You will be able to edit cron "arguments", "schedules" and "next run".
+4. Bulk actions for selected cron jobs.
+5. Customize your page in the "Screen Options" section.
+6. Quick information about Wordpress cron jobs.
+7. Information about "Screen Options" customization.
+8. Status of your Wordpress installation constants.
+9. Search for cron jobs.
+10. You will only be able to delete cron jobs with a missing hook.
 
 == Changelog ==
 
