@@ -4,7 +4,7 @@ Donate link: https://github.com/arielhr1987
 Tags: cron, jobs, cron jobs, schedule, event
 Requires at least: 4.1
 Tested up to: 5.2.2
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 Requires PHP: 5.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -39,11 +39,11 @@ e.g.
 
 = Can I create new cron jobs with this plugin =
 
-No. The plugin only allows you to run, edit and delete the cron job. However, we plan the have this feature soon.
+No. The plugin only allows you to run, edit and delete the cron job.
 
 = What aspects of the cron job i will be able to edit =
 
-The tool will help you to edit schedule, next execution time and the cron arguments
+The tool will help you to edit schedule, next execution time and the cron job arguments
 
 = Can I manage wordpress schedules =
 
