@@ -310,7 +310,7 @@ class Leira_Cron_Jobs_Admin{
 
 			if ( empty( $jobs ) ) {
 				//No jobs to execute action
-				$this->enqueue_message( 'warning', __( 'You most select at least one cron job to perform this action', 'leira-cron-jobs' ) );
+				$this->enqueue_message( 'error', __( 'You most select at least one cron job to perform this action', 'leira-cron-jobs' ) );
 			} else {
 				//action logic.
 				switch ( $action ) {
