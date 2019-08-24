@@ -5,6 +5,10 @@
 /* global inlineEditL10n, ajaxurl, inlineEditCron */
 
 window.wp = window.wp || {};
+inlineEditL10n = {
+    error: "Error while saving the changes.",
+    saved: "Changes saved."
+};
 
 /**
  * Consists of functions relevant to the inline taxonomy editor.
