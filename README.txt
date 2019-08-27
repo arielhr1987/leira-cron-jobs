@@ -1,7 +1,7 @@
 === Cron Jobs ===
 Contributors: arielhr1987, jlcd0894
 Donate link: https://github.com/arielhr1987
-Tags: cron, jobs, cron jobs, schedule, event, wp-cron, wp cron
+Tags: cron, jobs, cron jobs, schedule, event, wp-cron, wp cron, debug, dev, admin, member
 Requires at least: 4.1
 Tested up to: 5.2.2
 Stable tag: 1.1.0
@@ -64,5 +64,5 @@ No. At the moment you won't be able to manage schedules, but we plan to have tha
 
 == Changelog ==
 
-
-== Upgrade Notice ==
+= 1.0.0 =
+* Tee first plugin release
