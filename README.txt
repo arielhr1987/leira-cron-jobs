@@ -4,7 +4,7 @@ Donate link: https://github.com/arielhr1987
 Tags: cron, jobs, cron jobs, schedule, event, wp-cron, wp cron, debug, dev, admin, member
 Requires at least: 4.1
 Tested up to: 5.2.2
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 Requires PHP: 5.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -65,4 +65,8 @@ No. At the moment you won't be able to manage schedules, but we plan to have tha
 == Changelog ==
 
 = 1.0.0 =
-* Tee first plugin release
+* The first plugin release
+
+= 1.1.1 =
+* Screenshot 6 updated
+* Source code improvement
