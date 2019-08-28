@@ -38,6 +38,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 
 	/**
 	 * Get a list of CSS classes for the WP_List_Table table tag.
+	 *
 	 * @return array List of CSS classes for the table tag.
 	 */
 	protected function get_table_classes() {
@@ -487,7 +488,8 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 			$order   = ( ! empty( $_REQUEST['order'] ) ) ? sanitize_text_field( $_REQUEST['order'] ) : 'asc'; //If no order, default to asc
 
 			//$result = strcmp( $a[ $orderby ], $b[ $orderby ] ); //Determine sort order, case sensitive
-			$result = strcasecmp( $a[ $orderby ], $b[ $orderby ] ); //Determine sort order, case insensitive
+			//$result = strcasecmp( $a[ $orderby ], $b[ $orderby ] ); //Determine sort order, case insensitive
+			$result = strnatcasecmp( $a[ $orderby ], $b[ $orderby ] ); //Determine sort order, case insensitive, natural order
 
 			return ( $order === 'asc' ) ? $result : - $result; //Send final sort direction to usort
 		}
