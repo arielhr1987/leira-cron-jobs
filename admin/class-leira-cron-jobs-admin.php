@@ -62,7 +62,7 @@ class Leira_Cron_Jobs_Admin{
 		if ( ! class_exists( 'Leira_Cron_Jobs_Manager' ) ) {
 			require_once plugin_dir_path( __FILE__ ) . 'class-leira-cron-jobs-manager.php';
 		}
-		Leira_Cron_Jobs::instance()->get_loader()->set( 'manager', new Leira_Cron_Jobs_Manager() );
+		leira_cron_jobs()->get_loader()->set( 'manager', new Leira_Cron_Jobs_Manager() );
 
 	}
 
@@ -297,7 +297,7 @@ class Leira_Cron_Jobs_Admin{
 			}
 
 			/** @var Leira_Cron_Jobs_Manager $manager */
-			$manager = Leira_Cron_Jobs::instance()->get_loader()->get( 'manager' );
+			$manager = leira_cron_jobs()->manager;
 
 			$redirect = wp_get_referer();
 			if ( empty( $redirect ) ) {
@@ -434,7 +434,7 @@ class Leira_Cron_Jobs_Admin{
 		 */
 
 		/** @var Leira_Cron_Jobs_Manager $manager */
-		$manager = Leira_Cron_Jobs::instance()->get_loader()->get( 'manager' );
+		$manager = leira_cron_jobs()->manager;
 		$args    = isset( $_REQUEST['args'] ) ? sanitize_text_field( $_REQUEST['args'] ) : '';
 		$args    = @json_decode( $args, true );
 		if ( ! is_array( $args ) ) {

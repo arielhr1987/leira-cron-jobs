@@ -13,6 +13,8 @@
  * @package    Leira_Cron_Jobs
  * @subpackage Leira_Cron_Jobs/includes
  * @author     Ariel <arielhr1987@gmail.com>
+ *
+ * @property Leira_Cron_Jobs_Manager manager
  */
 class Leira_Cron_Jobs{
 
@@ -227,6 +229,35 @@ class Leira_Cron_Jobs{
 	 */
 	public function get_version() {
 		return $this->version;
+	}
+
+	/**
+	 * Gets an instance from the loader
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed|null The instance
+	 *
+	 * @since     1.2.0
+	 * @access    public
+	 *
+	 */
+	public function __get( $key ) {
+		return $this->get_loader()->get( $key );
+	}
+
+	/**
+	 * Sets an instance in the loader
+	 *
+	 * @param string $key
+	 * @param mixed  $value
+	 *
+	 * @since     1.2.0
+	 * @access    public
+	 *
+	 */
+	public function __set( $key, $value ) {
+		$this->get_loader()->set( $key, $value );
 	}
 
 }

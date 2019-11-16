@@ -32,7 +32,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 			'ajax'     => true            //does this table support ajax?
 		) );
 
-		$this->manager = Leira_Cron_Jobs::instance()->get_loader()->get( 'manager' );
+		$this->manager = leira_cron_jobs()->manager;
 
 	}
 

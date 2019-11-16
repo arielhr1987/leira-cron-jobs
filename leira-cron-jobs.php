@@ -16,9 +16,9 @@
  * Plugin Name:       Cron Jobs
  * Plugin URI:        https://github.com/arielhr1987/leira-cron-jobs
  * Description:       Cron Jobs is a simple, but powerful plugin that will help you to manage your site cron jobs easily.
- * Version:           1.1.2
+ * Version:           1.2.0
  * Author:            Ariel
- * Author URI:        https://github.com/arielhr1987
+ * Author URI:        https://leira.dev
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       leira-cron-jobs
@@ -65,6 +65,17 @@ register_deactivation_hook( __FILE__, 'deactivate_leira_cron_jobs' );
 require plugin_dir_path( __FILE__ ) . 'includes/class-leira-cron-jobs.php';
 
 /**
+ * Helper method to get the main instance of the plugin
+ *
+ * @return Leira_Cron_Jobs
+ * @since    1.2.0
+ * @access   global
+ */
+function leira_cron_jobs() {
+	return Leira_Cron_Jobs::instance();
+}
+
+/**
  * Begins execution of the plugin.
  *
  * Since everything within the plugin is registered via hooks,
@@ -73,4 +84,4 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-leira-cron-jobs.php';
  *
  * @since    1.0.0
  */
-Leira_Cron_Jobs::instance()->run();
+leira_cron_jobs()->run();
