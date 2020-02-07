@@ -217,6 +217,9 @@ class Leira_Cron_Jobs_Admin{
 					'<li>' . __( 'You can hide/display columns based on your needs and decide how many cron jobs to list per screen using the <strong>Screen Options</strong> tab.', 'leira-cron-jobs' ) . '</li>' .
 					'<li>' . __( 'You can filter the list of cron jobs by schedule using the text links above the list to only show those with that status. The default view is to show all.', 'leira-cron-jobs' ) . '</li>' .
 					'<li>' . __( 'The <strong>Search Events</strong> button will search for crons containing the text you type in the box.', 'leira-cron-jobs' ) . '</li>' .
+					'<li>' . __( 'The cron jobs marked as red in the list table are <strong>orphan cron jobs</strong>, which mean they are scheduled but are not executing any code. This happen mostly when you deactivate a plugin that previously schedule a cron job.', 'leira-cron-jobs' ) . '</li>' .
+					'<li>' . __( '<strong>Orphan cron jobs</strong> can only be deleted.', 'leira-cron-jobs' ) . '</li>' .
+					'<li>' . __( 'Those cron jobs marked as blue in the list table are being executed at the moment.', 'leira-cron-jobs' ) . '</li>' .
 					'</ul>'
 			)
 		);

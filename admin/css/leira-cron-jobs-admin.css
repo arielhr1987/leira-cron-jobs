@@ -17,6 +17,8 @@ table.cron-jobs td.column-title strong {
   display: block;
   margin-bottom: .2em;
   font-size: 14px; }
+table.cron-jobs td fieldset.inline-edit-date > legend {
+  padding: 0; }
 
 @media screen and (max-width: 782px) {
   #wpbody-content .inline-edit-row-cron-job .inline-edit-col-right,

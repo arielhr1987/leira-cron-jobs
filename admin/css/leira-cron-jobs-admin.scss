@@ -67,6 +67,12 @@ table.cron-jobs {
       //font-weight: 400;
       //word-wrap: normal;
     }
+
+    fieldset.inline-edit-date{
+      > legend {
+        padding: 0;
+      }
+    }
   }
 }
 
