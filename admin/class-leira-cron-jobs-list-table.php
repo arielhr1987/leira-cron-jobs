@@ -287,8 +287,8 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'run'    => 'Run now',
-			'delete' => 'Delete'
+			'run'    => __('Run now', 'leira-cron-jobs'),
+			'delete' => __('Delete', 'leira-cron-jobs')
 		);
 
 		return $actions;
