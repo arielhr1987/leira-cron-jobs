@@ -129,7 +129,7 @@ class Leira_Cron_Jobs_Admin{
 		?>
 
         <div class="wrap">
-            <h1 class="wp-heading-inline">Cron Jobs</h1>
+            <h1 class="wp-heading-inline"><?php echo __( 'Cron Jobs', 'leira-cron-jobs' ) ?></h1>
             <!--<a href="#" class="page-title-action">--><?php //_e( 'Add New', 'leira-cron-jobs' ) ?><!--</a>-->
 			<?php
 			if ( isset( $_REQUEST['s'] ) && $search = esc_attr( wp_unslash( $_REQUEST['s'] ) ) ) {
@@ -235,8 +235,8 @@ class Leira_Cron_Jobs_Admin{
 
 		$status .= '<ul>' .
 		           //'<li><div class="notice notice-error notice-alt inline"><p class="error">0</p> </div></li>'.
-		           '<li>' . sprintf( __( 'The <strong>DISABLE_WP_CRON</strong> constant is set to <strong>%s</strong>. ', 'leira-cron-jobs' ), $disable_cron ? 'TRUE' : 'FALSE' ) . ( $disable_cron ? __( 'Make sure to create a server CRON daemon that points to the file <strong>wp-cron.php</strong> located in your Wordpress installation root folder', 'leira-cron-jobs' ) : '' ) . '</li>' .
-		           '<li>' . sprintf( __( 'The <strong>ALTERNATE_WP_CRON</strong> constant is set to <strong>%s</strong>. ', 'leira-cron-jobs' ), $alternate_cron ? 'TRUE' : 'FALSE' ) . '</li>' .
+		           '<li>' . sprintf( __( '<strong>DISABLE_WP_CRON</strong> constant is set to <strong>%s</strong>. ', 'leira-cron-jobs' ), $disable_cron ? 'TRUE' : 'FALSE' ) . ( $disable_cron ? __( 'Make sure to create a server CRON daemon that points to the file <strong>wp-cron.php</strong> located in your Wordpress installation root folder', 'leira-cron-jobs' ) : '' ) . '</li>' .
+		           '<li>' . sprintf( __( '<strong>ALTERNATE_WP_CRON</strong> constant is set to <strong>%s</strong>. ', 'leira-cron-jobs' ), $alternate_cron ? 'TRUE' : 'FALSE' ) . '</li>' .
 		           '<ul>';
 
 		get_current_screen()->add_help_tab(
@@ -244,6 +244,23 @@ class Leira_Cron_Jobs_Admin{
 				'id'      => 'status',
 				'title'   => __( 'Status', 'leira-cron-jobs' ),
 				'content' => $status,
+			)
+		);
+
+		$schedules = '<p>' . __( 'Your Wordpress schedules:', 'leira-cron-jobs' ) . '</p>';
+		$schedules .= '<ul>';
+		foreach ( wp_get_schedules() as $schedule ) {
+			$human_readable = $schedule['interval'];
+			$human_readable = $this->human_readable_duration( $human_readable );
+			$schedules      .= '<li>' . sprintf( __( '<strong>%s</strong>: Every %s. ', 'leira-cron-jobs' ), $schedule['display'], $human_readable ) . '</li>';
+		}
+		$schedules .= '<ul>';
+
+		get_current_screen()->add_help_tab(
+			array(
+				'id'      => 'schedules',
+				'title'   => __( 'Schedules', 'leira-cron-jobs' ),
+				'content' => $schedules,
 			)
 		);
 
@@ -488,5 +505,35 @@ class Leira_Cron_Jobs_Admin{
 			echo sprintf( '<div class="notice notice-%s is-dismissible"><p>%s</p></div>', $type, $text );
 		}
 		$_SESSION['leira-cron-jobs-flash-message'] = array();
+	}
+
+	/**
+	 * Convert seconds to human readable string
+	 *
+	 * @param integer $seconds
+	 *
+	 * @return string
+	 */
+	public function human_readable_duration( $seconds ) {
+
+		$points                  = array(
+			'year'   => 31556926,
+			'month'  => 2629743,
+			'week'   => 604800,
+			'day'    => 86400,
+			'hour'   => 3600,
+			'minute' => 60,
+			'second' => 1
+		);
+		$human_readable_duration = array();
+		foreach ( $points as $point => $value ) {
+			if ( $elapsed = floor( $seconds / $value ) ) {
+				$seconds                   = $seconds % $value;
+				$s                         = $elapsed > 1 ? 's' : '';
+				$human_readable_duration[] = sprintf( _n( "%s $point", "%s $point$s", $elapsed ), (int) $elapsed );
+			}
+		}
+
+		return implode( ', ', $human_readable_duration );
 	}
 }
