@@ -2,19 +2,22 @@
 # This file is distributed under the same license as the Cron Jobs plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Cron Jobs 1.2.1\n"
+"Project-Id-Version: leira-cron-jobs\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/leira-cron-jobs\n"
-"POT-Creation-Date: 2020-04-18T02:23:27+00:00\n"
-"PO-Revision-Date: 2020-04-17 19:31-0700\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: es\n"
+"Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2020-04-18T02:23:27+00:00\n"
+"PO-Revision-Date: 2020-04-20 09:39-0700\n"
 "X-Generator: Poedit 2.3\n"
 "X-Domain: leira-cron-jobs\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: leira-cron-jobs\n"
+"X-Crowdin-Language: es-ES\n"
+"X-Crowdin-File: leira-cron-jobs.pot\n"
+"Language: es_ES\n"
+"Last-Translator: \n"
 
 #. Plugin Name of the plugin
 #: admin/class-leira-cron-jobs-admin.php:110
@@ -28,12 +31,8 @@ msgid "https://github.com/arielhr1987/leira-cron-jobs"
 msgstr "https://github.com/arielhr1987/leira-cron-jobs"
 
 #. Description of the plugin
-msgid ""
-"Cron Jobs is a simple, but powerful plugin that will help you to manage your "
-"site cron jobs easily."
-msgstr ""
-"Tareas Programadas es un plugin simple, pero potente que le ayudará a "
-"administrar los cron jobs(tareas programadas) de su sitio de manera fácil."
+msgid "Cron Jobs is a simple, but powerful plugin that will help you to manage your site cron jobs easily."
+msgstr "Tareas Programadas es un plugin simple, pero potente que le ayudará a administrar los cron jobs(tareas programadas) de su sitio de manera fácil."
 
 #. Author of the plugin
 msgid "Ariel"
@@ -66,139 +65,64 @@ msgid "Overview"
 msgstr "Información general"
 
 #: admin/class-leira-cron-jobs-admin.php:204
-msgid ""
-"Cron is the time-based task scheduling system that is available on UNIX "
-"systems. WP-Cron is how WordPress handles scheduling time-based tasks in "
-"WordPress. Several WordPress core features, such as checking for updates and "
-"publishing scheduled post, utilize WP-Cron."
-msgstr ""
-"Cron es el sistema de tareas programadas que se encuentra en sistemas UNIX. "
-"WP-Cron es la manera en que Wordpress se encarga de ejecutar tareas de "
-"manera programada. Varias funcionalidades del núcleo de Wordpress tales "
-"como, checar actualizaciones y publicar artículos automáticamente utilizan "
-"WP-Cron para su funcionamiento."
+msgid "Cron is the time-based task scheduling system that is available on UNIX systems. WP-Cron is how WordPress handles scheduling time-based tasks in WordPress. Several WordPress core features, such as checking for updates and publishing scheduled post, utilize WP-Cron."
+msgstr "Cron es el sistema de tareas programadas que se encuentra en sistemas UNIX. WP-Cron es la manera en que Wordpress se encarga de ejecutar tareas de manera programada. Varias funcionalidades del núcleo de Wordpress tales como, checar actualizaciones y publicar artículos automáticamente utilizan WP-Cron para su funcionamiento."
 
 #: admin/class-leira-cron-jobs-admin.php:205
-msgid ""
-"WP-Cron works by: on every page load, a list of scheduled tasks is checked "
-"to see what needs to be run. Any tasks scheduled to be run will be run "
-"during that page load. WP-Cron does not run constantly as the system cron "
-"does; it is only triggered on page load. Scheduling errors could occur if "
-"you schedule a task for 2:00PM and no page loads occur until 5:00PM."
-msgstr ""
-"Las tareas programadas funcionan de la siguiente manera. Cada vez que se "
-"cargue una página, el sistema busca en la lista de tareas programadas "
-"aquellas que necesitan ser ejecutadas en el momento. Aquellas tareas que "
-"requieran ser ejecutadas en ese momento se ejecutarán. Las tareas "
-"programadas no se ejecutan constantemente como si ocurre con las tareas cron "
-"de un servidor, solo se ejecutarán al cargar una página. Una tarea "
-"programada puede no ejecutarse en el tiempo establecido, si en ese momento "
-"no se solicita una página. Por ejemplo, si la tarea se debe ejecutar a las "
-"2:00 PM pero no existe ninguna petición hasta las 5:00 PM ."
+msgid "WP-Cron works by: on every page load, a list of scheduled tasks is checked to see what needs to be run. Any tasks scheduled to be run will be run during that page load. WP-Cron does not run constantly as the system cron does; it is only triggered on page load. Scheduling errors could occur if you schedule a task for 2:00PM and no page loads occur until 5:00PM."
+msgstr "Las tareas programadas funcionan de la siguiente manera. Cada vez que se cargue una página, el sistema busca en la lista de tareas programadas aquellas que necesitan ser ejecutadas en el momento. Aquellas tareas que requieran ser ejecutadas en ese momento se ejecutarán. Las tareas programadas no se ejecutan constantemente como si ocurre con las tareas cron de un servidor, solo se ejecutarán al cargar una página. Una tarea programada puede no ejecutarse en el tiempo establecido, si en ese momento no se solicita una página. Por ejemplo, si la tarea se debe ejecutar a las 2:00 PM pero no existe ninguna petición hasta las 5:00 PM ."
 
 #: admin/class-leira-cron-jobs-admin.php:206
-msgid ""
-"In the scenario where a site may not receive enough visits to execute "
-"scheduled tasks in a timely manner, you can call directly or via a server "
-"CRON daemon for X number of times the file <strong>wp-cron.php</strong> "
-"located in your Wordpress installation root folder."
-msgstr ""
-"En un escenario en el cual su sitio no tenga la suficiente cantidad de "
-"visitas para ejecutar las tareas programadas en tiempo puedes usar un CRON "
-"daemon por una cantidad X de tiempo para llamar de forma directa al archivo "
-"<strong>wp-cron.php</strong> que se encuentra en la carpeta raíz de "
-"Wordpress."
+msgid "In the scenario where a site may not receive enough visits to execute scheduled tasks in a timely manner, you can call directly or via a server CRON daemon for X number of times the file <strong>wp-cron.php</strong> located in your Wordpress installation root folder."
+msgstr "En un escenario en el cual su sitio no tenga la suficiente cantidad de visitas para ejecutar las tareas programadas en tiempo puedes usar un CRON daemon por una cantidad X de tiempo para llamar de forma directa al archivo <strong>wp-cron.php</strong> que se encuentra en la carpeta raíz de Wordpress."
 
 #: admin/class-leira-cron-jobs-admin.php:213
 msgid "Screen Content"
 msgstr "Opciones de pantalla"
 
 #: admin/class-leira-cron-jobs-admin.php:215
-msgid ""
-"You can customize the display of this screen&#8217;s contents in a number of "
-"ways:"
-msgstr ""
-"Existen varias opciones que te permitirán aprovechar al máximo las "
-"funcionalidades de este complemento:"
+msgid "You can customize the display of this screen&#8217;s contents in a number of ways:"
+msgstr "Existen varias opciones que te permitirán aprovechar al máximo las funcionalidades de este complemento:"
 
 #: admin/class-leira-cron-jobs-admin.php:217
-msgid ""
-"You can hide/display columns based on your needs and decide how many cron "
-"jobs to list per screen using the <strong>Screen Options</strong> tab."
-msgstr ""
-"Usando el panel “Opciones de pantalla” puedes ocultas o mostrar las columnas "
-"en dependencia de sus necesidades y decidir cuántas tareas programadas "
-"mostrar en la página."
+msgid "You can hide/display columns based on your needs and decide how many cron jobs to list per screen using the <strong>Screen Options</strong> tab."
+msgstr "Usando el panel “Opciones de pantalla” puedes ocultas o mostrar las columnas en dependencia de sus necesidades y decidir cuántas tareas programadas mostrar en la página."
 
 #: admin/class-leira-cron-jobs-admin.php:218
-msgid ""
-"You can filter the list of cron jobs by schedule using the text links above "
-"the list to only show those with that status. The default view is to show "
-"all."
-msgstr ""
-"Puede filtrar la lista de tareas programadas por “intervalo” usando los "
-"enlaces que se encuentran en la parte superior de la lista para mostrar "
-"solamente aquellos con el intervalo seleccionado. Por defecto el sistema "
-"mostrará todas las tareas progrmadas."
+msgid "You can filter the list of cron jobs by schedule using the text links above the list to only show those with that status. The default view is to show all."
+msgstr "Puede filtrar la lista de tareas programadas por “intervalo” usando los enlaces que se encuentran en la parte superior de la lista para mostrar solamente aquellos con el intervalo seleccionado. Por defecto el sistema mostrará todas las tareas progrmadas."
 
 #: admin/class-leira-cron-jobs-admin.php:219
-msgid ""
-"The <strong>Search Events</strong> button will search for crons containing "
-"the text you type in the box."
-msgstr ""
-"El botón <strong>Buscar Tareas</strong> ejecutará una búsqueda de aquellas "
-"cuyo nombre contenga el texto insertado en el campo de texto."
+msgid "The <strong>Search Events</strong> button will search for crons containing the text you type in the box."
+msgstr "El botón <strong>Buscar Tareas</strong> ejecutará una búsqueda de aquellas cuyo nombre contenga el texto insertado en el campo de texto."
 
 #: admin/class-leira-cron-jobs-admin.php:220
-msgid ""
-"The cron jobs marked as red in the list table are <strong>orphan cron jobs</"
-"strong>, which mean they are scheduled but are not executing any code. This "
-"happen mostly when you deactivate a plugin that previously schedule a cron "
-"job."
-msgstr ""
-"Las tareas programadas marcadas en rojo en la lista son consideradas "
-"<strong>huérfanas</strong>, lo que significa que su ejecución está "
-"programada pero no ejecuta ningún código. Por lo general esto ocurre al "
-"desactivar un plugin que al momento de instalarse creo la tarea programas."
+msgid "The cron jobs marked as red in the list table are <strong>orphan cron jobs</strong>, which mean they are scheduled but are not executing any code. This happen mostly when you deactivate a plugin that previously schedule a cron job."
+msgstr "Las tareas programadas marcadas en rojo en la lista son consideradas <strong>huérfanas</strong>, lo que significa que su ejecución está programada pero no ejecuta ningún código. Por lo general esto ocurre al desactivar un plugin que al momento de instalarse creo la tarea programas."
 
 #: admin/class-leira-cron-jobs-admin.php:221
 msgid "<strong>Orphan cron jobs</strong> can only be deleted."
-msgstr ""
-"Las <strong>tareas programadas huérfanas</strong> solo pueden ser eliminadas."
+msgstr "Las <strong>tareas programadas huérfanas</strong> solo pueden ser eliminadas."
 
 #: admin/class-leira-cron-jobs-admin.php:222
-msgid ""
-"Those cron jobs marked as blue in the list table are being executed at the "
-"moment."
-msgstr ""
-"Las tareas programadas marcadas en azul son aquellas que se están ejecutando "
-"en este momento."
+msgid "Those cron jobs marked as blue in the list table are being executed at the moment."
+msgstr "Las tareas programadas marcadas en azul son aquellas que se están ejecutando en este momento."
 
 #: admin/class-leira-cron-jobs-admin.php:227
 msgid "Your Wordpress Cron Jobs status is:"
 msgstr "El estado de sus tareas programadas es:"
 
 #: admin/class-leira-cron-jobs-admin.php:238
-msgid ""
-"<strong>DISABLE_WP_CRON</strong> constant is set to <strong>%s</strong>. "
-msgstr ""
-"El valor de la constante <strong>DISABLE_WP_CRON</strong> es <strong>%s</"
-"strong>. "
+msgid "<strong>DISABLE_WP_CRON</strong> constant is set to <strong>%s</strong>. "
+msgstr "El valor de la constante <strong>DISABLE_WP_CRON</strong> es <strong>%s</strong>. "
 
 #: admin/class-leira-cron-jobs-admin.php:238
-msgid ""
-"Make sure to create a server CRON daemon that points to the file <strong>wp-"
-"cron.php</strong> located in your Wordpress installation root folder"
-msgstr ""
-"Asegúrese de crear un CRON daemon en su servidor que apunte al fichero "
-"<strong>wp-cron.php</strong> que se encuentra en la carpeta raíz de Wordpress"
+msgid "Make sure to create a server CRON daemon that points to the file <strong>wp-cron.php</strong> located in your Wordpress installation root folder"
+msgstr "Asegúrese de crear un CRON daemon en su servidor que apunte al fichero <strong>wp-cron.php</strong> que se encuentra en la carpeta raíz de Wordpress"
 
 #: admin/class-leira-cron-jobs-admin.php:239
-msgid ""
-"<strong>ALTERNATE_WP_CRON</strong> constant is set to <strong>%s</strong>. "
-msgstr ""
-"El valor de la constante <strong>ALTERNATE_WP_CRON</strong> es <strong>%s</"
-"strong>. "
+msgid "<strong>ALTERNATE_WP_CRON</strong> constant is set to <strong>%s</strong>. "
+msgstr "El valor de la constante <strong>ALTERNATE_WP_CRON</strong> es <strong>%s</strong>. "
 
 #: admin/class-leira-cron-jobs-admin.php:245
 msgid "Status"
@@ -221,23 +145,16 @@ msgid "For more information:"
 msgstr "Para mas información:"
 
 #: admin/class-leira-cron-jobs-admin.php:269
-msgid ""
-"<a href=\"https://developer.wordpress.org/plugins/cron/\">Documentation on "
-"Crons</a>"
-msgstr ""
-"<a href=“https://developer.wordpress.org/plugins/cron/“>Documentación</a>"
+msgid "<a href=\"https://developer.wordpress.org/plugins/cron/\">Documentation on Crons</a>"
+msgstr "<a href=“https://developer.wordpress.org/plugins/cron/“>Documentación</a>"
 
 #: admin/class-leira-cron-jobs-admin.php:270
 msgid "<a href=\"https://wordpress.org/support/\">Support</a>"
 msgstr "<a href=“https://wordpress.org/support/“>Soporte</a>"
 
 #: admin/class-leira-cron-jobs-admin.php:271
-msgid ""
-"<a href=\"https://github.com/arielhr1987/leira-cron-jobs/issues\">Report an "
-"issue</a>"
-msgstr ""
-"<a href=“https://github.com/arielhr1987/leira-cron-jobs/issues”>Reportar un "
-"problema</a>"
+msgid "<a href=\"https://github.com/arielhr1987/leira-cron-jobs/issues\">Report an issue</a>"
+msgstr "<a href=“https://github.com/arielhr1987/leira-cron-jobs/issues”>Reportar un problema</a>"
 
 #: admin/class-leira-cron-jobs-admin.php:276
 msgid "Filter Cron Job list"
@@ -253,18 +170,15 @@ msgstr "Lista de tareas programadas"
 
 #: admin/class-leira-cron-jobs-admin.php:333
 msgid "You most select at least one cron job to perform this action"
-msgstr ""
-"Debe seleccionar al menos una tarea programada para ejecutar esta acción"
+msgstr "Debe seleccionar al menos una tarea programada para ejecutar esta acción"
 
 #: admin/class-leira-cron-jobs-admin.php:339
 msgid "The selected cron jobs are being executed at this moment"
-msgstr ""
-"Las tareas programadas seleccionadas se están ejecutando en este momento"
+msgstr "Las tareas programadas seleccionadas se están ejecutando en este momento"
 
 #: admin/class-leira-cron-jobs-admin.php:345
 msgid "Selected cron jobs were successfully deleted"
-msgstr ""
-"Las tareas programadas seleccionadas fueron eliminadas satisfactoriamente"
+msgstr "Las tareas programadas seleccionadas fueron eliminadas satisfactoriamente"
 
 #: admin/class-leira-cron-jobs-admin.php:372
 msgid "You do not have sufficient permissions to edit this cron job."
@@ -279,26 +193,16 @@ msgid "Missing parameters. Refresh the page and try again."
 msgstr "Parámetros incorrectos. Actualice la página e intente nuevamente."
 
 #: admin/class-leira-cron-jobs-admin.php:419
-msgid ""
-"Incorrect schedule. Please select a valid schedule from the dropdown menu "
-"and try again."
-msgstr ""
-"Intervalo incorrecto. Por favor seleccione un “intervalo” válido del menú "
-"desplegable e inténtelo nuevamente."
+msgid "Incorrect schedule. Please select a valid schedule from the dropdown menu and try again."
+msgstr "Intervalo incorrecto. Por favor seleccione un “intervalo” válido del menú desplegable e inténtelo nuevamente."
 
 #: admin/class-leira-cron-jobs-admin.php:446
-msgid ""
-"Invalid \"Execution\" datetime. Please select a valid datetime and try again."
-msgstr ""
-"La fecha de “Ejecución” es incorrecta. Por favor seleccione una fecha válida "
-"e intente nuevamente."
+msgid "Invalid \"Execution\" datetime. Please select a valid datetime and try again."
+msgstr "La fecha de “Ejecución” es incorrecta. Por favor seleccione una fecha válida e intente nuevamente."
 
 #: admin/class-leira-cron-jobs-admin.php:467
-msgid ""
-"An Error occurred while editing the cron job. Refresh the page and try again."
-msgstr ""
-"Ha ocurrido un error al editar el cron Job. Actualice la página e intente "
-"nuevamente."
+msgid "An Error occurred while editing the cron job. Refresh the page and try again."
+msgstr "Ha ocurrido un error al editar la tarea programada. Actualice la página e intente nuevamente."
 
 #: admin/class-leira-cron-jobs-list-table.php:77
 msgid "Job"
@@ -366,11 +270,8 @@ msgid "Args"
 msgstr "Args"
 
 #: admin/class-leira-cron-jobs-list-table.php:557
-msgid ""
-"Use a JSON encoded array, e.g. [10] , [\"value\"] or [10,\"mixed\",\"values"
-"\"]"
-msgstr ""
-"Use un arreglo con formato JSON, ej: [10] , [“value”] ó [10,”mixed”,”values]"
+msgid "Use a JSON encoded array, e.g. [10] , [\"value\"] or [10,\"mixed\",\"values\"]"
+msgstr "Usa un arreglo con codificación JSON, por ejemplo, [10] , [\"valor\"] o [10,\"mezclado\",\"valores\"]"
 
 #: admin/class-leira-cron-jobs-list-table.php:577
 msgid "Execution"
