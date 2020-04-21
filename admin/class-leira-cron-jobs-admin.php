@@ -178,7 +178,7 @@ class Leira_Cron_Jobs_Admin{
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/leira-cron-jobs-admin.css', array(), $this->version, 'all' );
 
 		//enqueue scripts
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/leira-cron-jobs-admin.js', array(
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/leira-cron-jobs-admin.min.js', array(
 			'jquery',
 			'wp-a11y'
 		), $this->version, false );
