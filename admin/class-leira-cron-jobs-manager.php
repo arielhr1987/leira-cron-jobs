@@ -6,7 +6,7 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @link       https://github.com/arielhr1987
+ * @link       https://github.com/arielhr1987/leira-cron-jobs
  * @since      1.0.0
  * @package    Leira_Cron_Jobs
  * @subpackage Leira_Cron_Jobs/admin

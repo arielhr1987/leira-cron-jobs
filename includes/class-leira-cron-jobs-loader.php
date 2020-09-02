@@ -7,7 +7,7 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @link       https://github.com/arielhr1987
+ * @link       https://github.com/arielhr1987/leira-cron-jobs
  * @since      1.0.0
  * @package    Leira_Cron_Jobs
  * @subpackage Leira_Cron_Jobs/includes

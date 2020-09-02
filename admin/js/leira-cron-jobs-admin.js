@@ -93,6 +93,18 @@ inlineEditL10n = {
              */
             $('#inline-edit input[name="offset"]').val(new Date().getTimezoneOffset());
 
+            /**
+             * Handle rate us footer click
+             */
+            $('body').on('click', 'a.leira-cron-jobs-admin-rating-link', function () {
+                $.post(ajaxurl, {
+                    action: 'leira-cron-jobs-footer-rated',
+                    _wpnonce: $(this).data('nonce')
+                }, function () {
+                    //on success do nothing
+                });
+                $(this).parent().text($(this).data('rated'));
+            });
         },
 
         /**

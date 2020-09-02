@@ -14,7 +14,8 @@
  * @subpackage Leira_Cron_Jobs/includes
  * @author     Ariel <arielhr1987@gmail.com>
  *
- * @property Leira_Cron_Jobs_Manager manager
+ * @property Leira_Cron_Jobs_Manager       manager
+ * @property Leira_Cron_Jobs_Notifications notify
  */
 class Leira_Cron_Jobs{
 
@@ -120,6 +121,11 @@ class Leira_Cron_Jobs{
 		 */
 		if ( is_admin() ) {
 			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-leira-cron-jobs-admin.php';
+
+			/**
+			 * Class to handle all notifications
+			 */
+			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-leira-cron-jobs-notifications.php';
 		}
 
 		/**
@@ -170,6 +176,15 @@ class Leira_Cron_Jobs{
 			$this->loader->add_action( 'wp_ajax_inline-save-cron-job', $plugin_admin, 'ajax_save' );
 
 			$this->loader->add_filter( 'set-screen-option', $plugin_admin, 'filter_set_screen_option', 10, 3 );
+
+			/**
+			 * Rate us
+			 */
+			$this->loader->add_filter( 'admin_footer_text', $plugin_admin, 'admin_footer_text', 1000 );
+			$this->loader->add_action( 'wp_ajax_leira-cron-jobs-footer-rated', $plugin_admin, 'footer_rated' );
+
+			$plugin_notifications = new Leira_Cron_Jobs_Notifications();
+			$this->get_loader()->set( 'notify', $plugin_notifications );
 
 		}
 

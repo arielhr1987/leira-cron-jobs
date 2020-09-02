@@ -6,7 +6,7 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @link       https://github.com/arielhr1987
+ * @link       https://github.com/arielhr1987/leira-cron-jobs
  * @since      1.0.0
  * @package    Leira_Cron_Jobs
  * @subpackage Leira_Cron_Jobs/admin
@@ -169,11 +169,6 @@ class Leira_Cron_Jobs_Admin{
 			wp_die( __( 'You do not have sufficient permissions to access this page.', 'leira-cron-jobs' ) );
 		}
 
-		//ensure session is started. Its used for user notifications
-		if ( session_status() !== PHP_SESSION_ACTIVE ) {
-			session_start();
-		}
-
 		//enqueue styles
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/leira-cron-jobs-admin.css', array(), $this->version, 'all' );
 
@@ -186,7 +181,7 @@ class Leira_Cron_Jobs_Admin{
 		//initialize table here to be able to register default WP_List_Table screen options
 		$this->get_list_table();
 
-		//handle bulk ans simple actions
+		//handle bulk and simple actions
 		$this->handle_actions();
 
 		//add modal thickbox js
@@ -493,18 +488,14 @@ class Leira_Cron_Jobs_Admin{
 	 * @param $text
 	 */
 	protected function enqueue_message( $type, $text ) {
-		$_SESSION['leira-cron-jobs-flash-message'] = array( $type => $text );
+		leira_cron_jobs()->notify->add( $type, $text );
 	}
 
 	/**
 	 * Display admin flash notices
 	 */
 	public function admin_notices() {
-		$messages = isset( $_SESSION['leira-cron-jobs-flash-message'] ) ? $_SESSION['leira-cron-jobs-flash-message'] : array();
-		foreach ( $messages as $type => $text ) {
-			echo sprintf( '<div class="notice notice-%s is-dismissible"><p>%s</p></div>', $type, $text );
-		}
-		$_SESSION['leira-cron-jobs-flash-message'] = array();
+		echo leira_cron_jobs()->notify->display();
 	}
 
 	/**
@@ -535,5 +526,73 @@ class Leira_Cron_Jobs_Admin{
 		}
 
 		return implode( ', ', $human_readable_duration );
+	}
+
+	/**
+	 * Change the admin footer text on Cron Jobs page
+	 * Give us a rate
+	 *
+	 * @param $footer_text
+	 *
+	 * @return string
+	 * @since 1.2.3
+	 */
+	public function admin_footer_text( $footer_text ) {
+		$current_screen = get_current_screen();
+
+		//Pages where we are going to show footer review
+		$pages = array(
+			'tools_page_leira-cron-jobs',
+		);
+
+		if ( isset( $current_screen->id ) && in_array( $current_screen->id, $pages ) ) {
+			// Change the footer text
+			if ( ! get_option( 'leira-cron-jobs-footer-rated' ) ) {
+
+				ob_start(); ?>
+                <a href="https://wordpress.org/support/plugin/leira-cron-jobs/reviews/?filter=5" target="_blank"
+                   class="leira-cron-jobs-admin-rating-link"
+                   data-rated="<?php esc_attr_e( 'Thanks :)', 'leira-cron-jobs' ) ?>"
+                   data-nonce="<?php echo wp_create_nonce( 'footer-rated' ) ?>">
+                    &#9733;&#9733;&#9733;&#9733;&#9733;
+                </a>
+				<?php $link = ob_get_clean();
+
+				ob_start();
+
+				printf( __( 'If you like Cron Jobs please consider leaving a %s review. It will help us to grow the plugin and make it more popular. Thank you.', 'leira-cron-jobs' ), $link ) ?>
+
+				<?php $footer_text = ob_get_clean();
+			}
+		}
+
+		return $footer_text;
+	}
+
+	/**
+	 * When user clicks the review link in backend
+	 *
+	 * @since 1.2.3
+	 */
+	public function footer_rated() {
+		/**
+		 * Check capabilities
+		 */
+		if ( ! current_user_can( $this->capability ) ) {
+			wp_send_json_error( __( 'You do not have sufficient permissions to perform this action.', 'leira-cron-jobs' ) );
+		}
+
+		/**
+		 * Check nonce
+		 */
+		$action    = 'footer-rated';
+		$query_arg = '_wpnonce';
+		$checked   = isset( $_REQUEST[ $query_arg ] ) && wp_verify_nonce( $_REQUEST[ $query_arg ], $action );
+		if ( ! $checked ) {
+			wp_send_json_error( __( 'Your link has expired, refresh the page and try again.', 'leira-cron-jobs' ) );
+		}
+
+		//update_option( 'leira-cron-jobs-footer-rated', 1 );
+		wp_send_json_success();
 	}
 }
