@@ -592,7 +592,7 @@ class Leira_Cron_Jobs_Admin{
 			wp_send_json_error( __( 'Your link has expired, refresh the page and try again.', 'leira-cron-jobs' ) );
 		}
 
-		//update_option( 'leira-cron-jobs-footer-rated', 1 );
+		update_option( 'leira-cron-jobs-footer-rated', 1 );
 		wp_send_json_success();
 	}
 }
