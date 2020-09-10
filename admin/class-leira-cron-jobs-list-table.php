@@ -377,7 +377,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 		//build view links
 		foreach ( $schedules as $schedule => $details ) {
 			$text  = isset( $details['display'] ) ? $details['display'] : __( $schedule, 'leira-cron-jobs' );
-			$count = $details['count'];
+			$count = isset( $details['count'] ) ? $details['count'] : null;
 			if ( ! $count ) {
 				continue;
 			}
