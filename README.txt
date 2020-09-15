@@ -4,7 +4,7 @@ Donate link: https://github.com/arielhr1987
 Tags: cron, jobs, cron jobs, schedule, event, wp-cron, wp cron, debug, dev, admin, member
 Requires at least: 4.1
 Tested up to: 5.5.1
-Stable tag: 1.2.5
+Stable tag: 1.2.6
 Requires PHP: 5.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -63,6 +63,14 @@ No. At the moment you won't be able to manage schedules, but we plan to have tha
 10. You will only be able to delete cron jobs with a missing hook.
 
 == Changelog ==
+
+= 1.2.6 =
+* Adding Github Action for automatic plugin deploy
+* Adding Github Action for automatic update readme.txt and assets
+* Bug fix thanks to ptibogxiv
+
+= 1.2.5 =
+* Bug fix
 
 = 1.2.4 =
 * Bug fix
