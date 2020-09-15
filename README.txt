@@ -33,15 +33,15 @@ With the plugin you will be able to:
 
 == Frequently Asked Questions ==
 
-= Can I create new cron jobs with this plugin =
+= Can I create new cron jobs with this plugin? =
 
 No. The plugin only allows you to run, edit and delete current cron job.
 
-= What aspects of the cron job i will be able to edit =
+= What aspects of the cron job will I be able to edit? =
 
 The tool will help you to edit schedule, next execution time and the cron job arguments
 
-= Can I manage wordpress schedules =
+= Can I manage wordpress schedules? =
 
 No. At the moment you won't be able to manage schedules, but we plan to have that feature soon.
 
