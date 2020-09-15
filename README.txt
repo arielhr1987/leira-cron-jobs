@@ -26,20 +26,16 @@ With the plugin you will be able to:
 
 == Installation ==
 
-This section describes how to install the plugin and get it working.
-
-e.g.
-
 1. Upload the plugin files to the `/wp-content/plugins/leira-cron-jobs` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress
-3. Use the Settings->Plugin Name screen to configure the plugin
+3. Go to Tools -> Cron Jobs screen to use the plugin
 4. Happy coding :)
 
 == Frequently Asked Questions ==
 
 = Can I create new cron jobs with this plugin =
 
-No. The plugin only allows you to run, edit and delete the cron job.
+No. The plugin only allows you to run, edit and delete current cron job.
 
 = What aspects of the cron job i will be able to edit =
 
