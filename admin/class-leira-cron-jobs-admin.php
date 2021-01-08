@@ -451,6 +451,7 @@ class Leira_Cron_Jobs_Admin{
 		/** @var Leira_Cron_Jobs_Manager $manager */
 		$manager = leira_cron_jobs()->manager;
 		$args    = isset( $_REQUEST['args'] ) ? sanitize_text_field( $_REQUEST['args'] ) : '';
+		$args    = stripslashes( $args );
 		$args    = @json_decode( $args, true );
 		if ( ! is_array( $args ) ) {
 			$args = array();
