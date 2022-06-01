@@ -3,7 +3,7 @@ Contributors: arielhr1987, jlcd0894
 Donate link: https://github.com/arielhr1987
 Tags: cron, jobs, cron jobs, schedule, event, wp-cron, wp cron, debug, dev, admin, member
 Requires at least: 4.1
-Tested up to: 5.9
+Tested up to: 6.0
 Stable tag: 1.2.9
 Requires PHP: 5.4
 License: GPLv2 or later
