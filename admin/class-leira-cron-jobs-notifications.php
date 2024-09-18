@@ -49,6 +49,7 @@ class Leira_Cron_Jobs_Notifications{
 			$messages = $_COOKIE[ $this->cookie ];
 			$messages = @json_decode( $messages, true );
 			if ( is_array( $messages ) ) {
+				$messages = wp_unslash( $messages );
 				$this->messages = $messages;
 			}
 
@@ -76,12 +77,12 @@ class Leira_Cron_Jobs_Notifications{
 					 * Sanitize to avoid XSS or any other kind of exploit
 					 */
 					$text = sanitize_text_field( urldecode( $message ) );
-					$html .= sprintf( '<div class="notice notice-%s is-dismissible"><p>%s</p></div>', $type, $text );
+					$html .= sprintf( '<div class="notice notice-%s is-dismissible"><p>%s</p></div>', esc_html( $type ), esc_html( $text ) );
 				}
 			}
 		}
 
-		return $html;
+		return wp_kses_post( $html );
 	}
 
 	/**
@@ -125,7 +126,7 @@ class Leira_Cron_Jobs_Notifications{
 			 * Set the cookie to read in the next call
 			 * Expiration time is set to a long number to avoid timezone differences
 			 */
-			@setcookie( $this->cookie, json_encode( $this->messages ), strtotime( '+1 month' ) );
+			@setcookie( $this->cookie, wp_json_encode( $this->messages ), strtotime( '+1 month' ) );
 		}
 
 		return true;

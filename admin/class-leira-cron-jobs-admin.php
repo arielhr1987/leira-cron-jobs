@@ -123,18 +123,18 @@ class Leira_Cron_Jobs_Admin{
 	 */
 	public function render_admin_page() {
 		if ( ! current_user_can( $this->capability ) ) {
-			wp_die( __( 'You do not have sufficient permissions to access this page.', 'leira-cron-jobs' ) );
+			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'leira-cron-jobs' ) );
 		}
 
 		?>
 
         <div class="wrap">
-            <h1 class="wp-heading-inline"><?php echo __( 'Cron Jobs', 'leira-cron-jobs' ) ?></h1>
+            <h1 class="wp-heading-inline"><?php echo esc_html__( 'Cron Jobs', 'leira-cron-jobs' ) ?></h1>
             <!--<a href="#" class="page-title-action">--><?php //_e( 'Add New', 'leira-cron-jobs' ) ?><!--</a>-->
 			<?php
-			if ( isset( $_REQUEST['s'] ) && $search = esc_attr( wp_unslash( $_REQUEST['s'] ) ) ) {
+			if ( isset( $_REQUEST['s'] ) && $search = esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) ) ) {
 				/* translators: %s: search keywords */
-				printf( ' <span class="subtitle">' . __( 'Search results for &#8220;%s&#8221;', 'leira-cron-jobs' ) . '</span>', $search );
+				printf( ' <span class="subtitle">' . esc_html__( 'Search results for &#8220;%s&#8221;', 'leira-cron-jobs' ) . '</span>', esc_html( $search ) );
 			}
 
 			//the cron job table instance
@@ -143,10 +143,10 @@ class Leira_Cron_Jobs_Admin{
 			$this->admin_notices();
 			?>
             <hr class="wp-header-end">
-            <h2 class="screen-reader-text"><?php _e( 'Filter cron jobs list', 'leira-cron-jobs' ) ?></h2>
-            <form action="<?php echo add_query_arg( '', '' ) ?>" method="post">
+            <h2 class="screen-reader-text"><?php esc_html_e( 'Filter cron jobs list', 'leira-cron-jobs' ) ?></h2>
+            <form action="<?php echo esc_url( add_query_arg( '', '' ) ) ?>" method="post">
 				<?php
-				$table->search_box( __( 'Search Events', 'leira-cron-jobs' ), 'event' );
+				$table->search_box( esc_html__( 'Search Events', 'leira-cron-jobs' ), 'event' );
 				$table->views();
 				$table->display(); //Display the table
 				?>
@@ -166,7 +166,7 @@ class Leira_Cron_Jobs_Admin{
 	 */
 	public function admin_page_load() {
 		if ( ! current_user_can( $this->capability ) ) {
-			wp_die( __( 'You do not have sufficient permissions to access this page.', 'leira-cron-jobs' ) );
+			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'leira-cron-jobs' ) );
 		}
 
 		//enqueue styles
@@ -230,7 +230,13 @@ class Leira_Cron_Jobs_Admin{
 
 		$status .= '<ul>' .
 		           //'<li><div class="notice notice-error notice-alt inline"><p class="error">0</p> </div></li>'.
+		           /*
+					* translators: The value of the constant DISABLE_WP_CRON
+					*/
 		           '<li>' . sprintf( __( '<strong>DISABLE_WP_CRON</strong> constant is set to <strong>%s</strong>. ', 'leira-cron-jobs' ), $disable_cron ? 'TRUE' : 'FALSE' ) . ( $disable_cron ? __( 'Make sure to create a server CRON daemon that points to the file <strong>wp-cron.php</strong> located in your Wordpress installation root folder', 'leira-cron-jobs' ) : '' ) . '</li>' .
+		           /*
+		            * translators: The value of the constant ALTERNATE_WP_CRON
+		            */
 		           '<li>' . sprintf( __( '<strong>ALTERNATE_WP_CRON</strong> constant is set to <strong>%s</strong>. ', 'leira-cron-jobs' ), $alternate_cron ? 'TRUE' : 'FALSE' ) . '</li>' .
 		           '<ul>';
 
@@ -247,7 +253,10 @@ class Leira_Cron_Jobs_Admin{
 		foreach ( wp_get_schedules() as $schedule ) {
 			$human_readable = $schedule['interval'];
 			$human_readable = $this->human_readable_duration( $human_readable );
-			$schedules      .= '<li>' . sprintf( __( '<strong>%s</strong>: Every %s. ', 'leira-cron-jobs' ), $schedule['display'], $human_readable ) . '</li>';
+			/*
+			 * translators: The scheduled time to execute the cron
+			 */
+			$schedules .= '<li>' . sprintf( __( '<strong>%1$s</strong>: Every %2$s. ', 'leira-cron-jobs' ), $schedule['display'], $human_readable ) . '</li>';
 		}
 		$schedules .= '<ul>';
 
@@ -304,7 +313,7 @@ class Leira_Cron_Jobs_Admin{
 		if ( ! empty( $action ) ) {
 
 			$query_arg = '_wpnonce';
-			$checked   = isset( $_REQUEST[ $query_arg ] ) && wp_verify_nonce( $_REQUEST[ $query_arg ], 'bulk-cron-jobs' );
+			$checked   = isset( $_REQUEST[ $query_arg ] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST[ $query_arg ] ) ), 'bulk-cron-jobs' );
 
 			if ( ! $checked ) {
 				//no action to handle, just show the page
@@ -321,7 +330,7 @@ class Leira_Cron_Jobs_Admin{
 				);
 				$redirect = add_query_arg( $params, admin_url( 'tools.php' ) );
 			}
-			$jobs = isset( $_REQUEST['job'] ) && is_array( $_REQUEST['job'] ) ? $_REQUEST['job'] : array();
+			$jobs = isset( $_REQUEST['job'] ) && is_array( $_REQUEST['job'] ) ? wp_unslash( $_REQUEST['job'] )  : array();
 
 			if ( empty( $jobs ) ) {
 				//No jobs to execute action
@@ -364,20 +373,16 @@ class Leira_Cron_Jobs_Admin{
 		 * Check user capability
 		 */
 		if ( ! current_user_can( $this->capability ) ) {
-			$out = __( 'You do not have sufficient permissions to edit this cron job.', 'leira-cron-jobs' );
-			//$out .= '<script>setTimeout(function() {}, 5000)</script>'; //refresh the page
-			wp_die( $out );
+			wp_die( esc_html__( 'You do not have sufficient permissions to edit this cron job.', 'leira-cron-jobs' ) );
 		}
 
 		/**
 		 * Check nonce
 		 */
 		$query_arg = '_inline_edit';
-		$checked   = isset( $_REQUEST[ $query_arg ] ) && wp_verify_nonce( $_REQUEST[ $query_arg ], 'cronjobinlineeditnonce' );
+		$checked   = isset( $_REQUEST[ $query_arg ] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST[ $query_arg ] ) ), 'cronjobinlineeditnonce' );
 		if ( ! $checked ) {
-			$out = __( 'Your link has expired, refresh the page and try again.', 'leira-cron-jobs' );
-			//$out .= '<script>setTimeout(function() {alert("");}, 5000)</script>'; //refresh the page
-			wp_die( $out );
+			wp_die( esc_html__( 'Your link has expired, refresh the page and try again.', 'leira-cron-jobs' ) );
 		}
 
 		/**
@@ -398,11 +403,10 @@ class Leira_Cron_Jobs_Admin{
 			'offset'   => 0 //UTC
 		);
 		foreach ( $values as $key => $value ) {
-			if ( ! isset( $_REQUEST[ $key ] ) || trim( $_REQUEST[ $key ] ) == '' ) {
-				$out = __( 'Missing parameters. Refresh the page and try again.', 'leira-cron-jobs' );
-				wp_die( $out );
+			if ( ! isset( $_REQUEST[ $key ] ) || trim( sanitize_text_field( wp_unslash( $_REQUEST[ $key ] ) ) ) == '' ) {
+				wp_die( esc_html__( 'Missing parameters. Refresh the page and try again.', 'leira-cron-jobs' ) );
 			}
-			$request_value = sanitize_text_field( $_REQUEST[ $key ] );
+			$request_value = sanitize_text_field( wp_unslash( $_REQUEST[ $key ] ) );
 			if ( in_array( $key, array( 'mm', 'jj', 'hh', 'mn', 'ss' ) ) ) {
 				//add leading zeros to date time fields
 				$request_value = str_pad( $request_value, 2, "0", STR_PAD_LEFT );
@@ -411,8 +415,7 @@ class Leira_Cron_Jobs_Admin{
 			$schedules                 = wp_get_schedules();
 			$schedules['__single_run'] = array();
 			if ( $key === 'schedule' && $schedules = wp_get_schedules() && ! isset( $schedules[ $request_value ] ) ) {
-				$out = __( 'Incorrect schedule. Please select a valid schedule from the dropdown menu and try again.', 'leira-cron-jobs' );
-				wp_die( $out );
+				wp_die( esc_html__( 'Incorrect schedule. Please select a valid schedule from the dropdown menu and try again.', 'leira-cron-jobs' ) );
 			}
 			if ( $key == 'aa' ) {
 
@@ -438,8 +441,7 @@ class Leira_Cron_Jobs_Admin{
 			//date time is valid
 		} else {
 			//invalid date time information
-			$out = __( 'Invalid "Execution" datetime. Please select a valid datetime and try again.', 'leira-cron-jobs' );
-			wp_die( $out );
+			wp_die( esc_html__( 'Invalid "Execution" datetime. Please select a valid datetime and try again.', 'leira-cron-jobs' ) );
 		}
 		//convert to UTC
 		$date->setTimezone( new DateTimeZone( timezone_name_from_abbr( '', 0, 1 ) ) );
@@ -450,9 +452,9 @@ class Leira_Cron_Jobs_Admin{
 
 		/** @var Leira_Cron_Jobs_Manager $manager */
 		$manager = leira_cron_jobs()->manager;
-		$args    = isset( $_REQUEST['args'] ) ? sanitize_text_field( $_REQUEST['args'] ) : '';
-		$args    = stripslashes( $args );
-		$args    = @json_decode( $args, true );
+		$args    = isset( $_REQUEST['args'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['args'] ) ) : '';
+		//$args    = stripslashes( $args );
+		$args = @json_decode( $args, true );
 		if ( ! is_array( $args ) ) {
 			$args = array();
 		}
@@ -460,8 +462,7 @@ class Leira_Cron_Jobs_Admin{
 
 		if ( ! $edited ) {
 			//The cron job does not exist or WP wasn't able to create it
-			$out = __( 'An Error occurred while editing the cron job. Refresh the page and try again.', 'leira-cron-jobs' );
-			wp_die( $out );
+			wp_die( esc_html__( 'An Error occurred while editing the cron job. Refresh the page and try again.', 'leira-cron-jobs' ) );
 		}
 
 		/**
@@ -474,7 +475,7 @@ class Leira_Cron_Jobs_Admin{
 		$table->single_row( array(
 			'event'    => $values['event'],
 			'action'   => ! empty( $action ) ? $action : '',
-			'args'     => ! empty( $args ) ? json_encode( $args ) : '',
+			'args'     => ! empty( $args ) ? wp_json_encode( $args ) : '',
 			'schedule' => $values['schedule'],
 			'time'     => $date->format( 'U' ),
 			'md5'      => md5( serialize( $args ) ),
@@ -554,14 +555,16 @@ class Leira_Cron_Jobs_Admin{
                 <a href="https://wordpress.org/support/plugin/leira-cron-jobs/reviews/?filter=5" target="_blank"
                    class="leira-cron-jobs-admin-rating-link"
                    data-rated="<?php esc_attr_e( 'Thanks :)', 'leira-cron-jobs' ) ?>"
-                   data-nonce="<?php echo wp_create_nonce( 'footer-rated' ) ?>">
+                   data-nonce="<?php echo esc_html( wp_create_nonce( 'footer-rated' ) ) ?>">
                     &#9733;&#9733;&#9733;&#9733;&#9733;
                 </a>
 				<?php $link = ob_get_clean();
-
 				ob_start();
 
-				printf( __( 'If you like Cron Jobs please consider leaving a %s review. It will help us to grow the plugin and make it more popular. Thank you.', 'leira-cron-jobs' ), $link ) ?>
+				/*
+				 * translators: The link to review the plugin
+				 */
+				printf( esc_html__( 'If you like Cron Jobs please consider leaving a %s review. It will help us to grow the plugin and make it more popular. Thank you.', 'leira-cron-jobs' ), wp_kses_post( $link ) ) ?>
 
 				<?php $footer_text = ob_get_clean();
 			}
@@ -588,7 +591,7 @@ class Leira_Cron_Jobs_Admin{
 		 */
 		$action    = 'footer-rated';
 		$query_arg = '_wpnonce';
-		$checked   = isset( $_REQUEST[ $query_arg ] ) && wp_verify_nonce( $_REQUEST[ $query_arg ], $action );
+		$checked   = isset( $_REQUEST[ $query_arg ] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST[ $query_arg ] ) ), $action );
 		if ( ! $checked ) {
 			wp_send_json_error( __( 'Your link has expired, refresh the page and try again.', 'leira-cron-jobs' ) );
 		}

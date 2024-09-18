@@ -49,7 +49,7 @@ class Leira_Cron_Jobs_Manager{
 						'event'    => $name,
 						'action'   => $this->get_cron_action( $name ),
 						//or use wp_json_encode( $details['args'], $options )
-						'args'     => isset( $details['args'] ) && ! empty( $details['args'] ) ? json_encode( $details['args'] ) : '',
+						'args'     => isset( $details['args'] ) && ! empty( $details['args'] ) ? wp_json_encode( $details['args'] ) : '',
 						'schedule' => $schedule,
 						'time'     => $time,
 						'md5'      => $md5,
@@ -95,7 +95,7 @@ class Leira_Cron_Jobs_Manager{
 						'event'    => $name,
 						'action'   => $this->get_cron_action( $name ),
 						//'args'     => isset( $details['args'] ) && ! empty( $details['args'] ) ? wp_json_encode( $details['args'], $options ) : '',
-						'args'     => isset( $details['args'] ) && ! empty( $details['args'] ) ? json_encode( $details['args'] ) : '',
+						'args'     => isset( $details['args'] ) && ! empty( $details['args'] ) ? wp_json_encode( $details['args'] ) : '',
 						'schedule' => $schedule,
 						'time'     => $time,
 						'md5'      => $md5,

@@ -63,7 +63,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 			$item['event'],
 			$item['md5']
 		) ) ) );
-		echo sprintf( '<tr id="%s" class="%s">', $job_key, implode( ' ', $class ) );
+		echo sprintf( '<tr id="%s" class="%s">', esc_html( $job_key ), esc_html( implode( ' ', $class ) ) );
 		$this->single_row_columns( $item );
 		echo '</tr>';
 	}
@@ -117,12 +117,12 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 		$job_key = 'job[' . $item['time'] . '][' . $item['event'] . ']';
 		$actions = array(
 			'delete' => sprintf( '<a href="%s" class="" onclick="return confirm(\'%s\')">%s</a>',
-				add_query_arg( array(
+				esc_url( add_query_arg( array(
 					'page'     => 'leira-cron-jobs',
 					'action'   => 'delete',
 					$job_key   => $item['md5'],
 					'_wpnonce' => wp_create_nonce( 'bulk-cron-jobs' )
-				), admin_url( 'tools.php' ) ),
+				), admin_url( 'tools.php' ) ) ),
 				__( 'Are you sure you want to delete this cron job?', 'leira-cron-jobs' ),
 				__( 'Delete', 'leira-cron-jobs' )
 			),
@@ -135,16 +135,19 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 
 			$actions = array_merge( array(
 				'run'                  => sprintf( '<a href="%s" class="">%s</a>',
-					add_query_arg( array(
+					esc_url( add_query_arg( array(
 						'page'     => 'leira-cron-jobs',
 						'action'   => 'run',
 						$job_key   => $item['md5'],
 						'_wpnonce' => wp_create_nonce( 'bulk-cron-jobs' )
-					), admin_url( 'tools.php' ) ),
+					), admin_url( 'tools.php' ) ) ),
 					__( 'Run now', 'leira-cron-jobs' )
 				),
 				'inline hide-if-no-js' => sprintf(
 					'<button type="button" class="button-link editinline" aria-label="%s" aria-expanded="false">%s</button>',
+					/*
+					 * translators: the cronjob name
+					 */
 					esc_attr( sprintf( __( 'Quick edit &#8220;%s&#8221; inline', 'leira-cron-jobs' ), $item['event'] ) ),
 					__( 'Quick&nbsp;Edit', 'leira-cron-jobs' )
 				)
@@ -238,7 +241,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 		$schedules = wp_get_schedules();
 		$schedule  = $item['schedule'];
 		if ( $schedule === '__single_run' ) {
-			$schedule = __( 'Single Run', 'leira-cron-jobs' );
+			$schedule = esc_html__( 'Single Run', 'leira-cron-jobs' );
 		} elseif ( isset( $schedules[ $schedule ]['display'] ) ) {
 			$schedule = $schedules[ $schedule ]['display'];
 		}
@@ -259,6 +262,9 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 
 		if ( $time_diff > 0 ) {
 			//it will run in the future
+			/*
+			 * translators: The human-readable time difference
+			 */
 			$h_diff = sprintf( __( 'In %s', 'leira-cron-jobs' ), human_time_diff( $time ) );
 		} else {
 			//run ASAP
@@ -287,8 +293,8 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'run'    => __('Run now', 'leira-cron-jobs'),
-			'delete' => __('Delete', 'leira-cron-jobs')
+			'run'    => __( 'Run now', 'leira-cron-jobs' ),
+			'delete' => __( 'Delete', 'leira-cron-jobs' )
 		);
 
 		return $actions;
@@ -301,7 +307,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 
 		$query_arg = '_wpnonce';
 		$action    = 'bulk-' . $this->_args['plural'];
-		$checked   = $result = isset( $_REQUEST[ $query_arg ] ) ? wp_verify_nonce( $_REQUEST[ $query_arg ], $action ) : false;
+		$checked   = isset( $_REQUEST[ $query_arg ] ) ? wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST[ $query_arg ] ) ), $action ) : false;
 
 		if ( ! $checked ) {
 			return;
@@ -360,7 +366,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 				'count'   => 0
 			)
 		), $schedules );
-		$status    = isset( $_REQUEST['filter'] ) && isset( $schedules[ $_REQUEST['filter'] ] ) ? $_REQUEST['filter'] : '__all';
+		$status    = isset( $_REQUEST['filter'] ) && isset( $schedules[ $_REQUEST['filter'] ] ) ? sanitize_text_field( wp_unslash( $_REQUEST['filter'] ) ) : '__all';
 
 		//determine task count per schedule
 		foreach ( $tasks as $task ) {
@@ -383,7 +389,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 			}
 
 			$views[ $schedule ] = sprintf( '<a href="%s"%s>%s</a>',
-				add_query_arg( 'filter', $schedule ),
+				esc_url( add_query_arg( 'filter', $schedule ) ),
 				( $schedule === $status ) ? sprintf( ' class="current" aria-current="%s"', 'page' ) : '',
 				sprintf( '%s <span class="count">(%s)</span>', $text, number_format_i18n( $count ) )
 			);
@@ -409,20 +415,21 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 		$input_id = $input_id . '-search-input';
 
 		if ( ! empty( $_REQUEST['orderby'] ) ) {
-			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) ) . '" />';
 		}
 		if ( ! empty( $_REQUEST['order'] ) ) {
-			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+			echo '<input type="hidden" name="order" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ) . '" />';
 		}
 		if ( ! empty( $_REQUEST['filter'] ) ) {
-			echo '<input type="hidden" name="filter" value="' . esc_attr( $_REQUEST['filter'] ) . '" />';
+			echo '<input type="hidden" name="filter" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['filter'] ) ) ) . '" />';
 		}
 		if ( ! empty( $_REQUEST['page'] ) ) {
-			echo '<input type="hidden" name="page" value="' . esc_attr( $_REQUEST['page'] ) . '" />';
+			echo '<input type="hidden" name="page" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ) ) . '" />';
 		}
 		?>
         <p class="search-box">
-            <label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo $text; ?>:</label>
+            <label class="screen-reader-text"
+                   for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
             <input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s"
                    value="<?php _admin_search_query(); ?>"/>
 			<?php submit_button( $text, '', '', false, array( 'id' => 'search-submit' ) ); ?>
@@ -453,7 +460,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 		/**
 		 * Handle search
 		 */
-		if ( ( ! empty( $_REQUEST['s'] ) ) && $search = $_REQUEST['s'] ) {
+		if ( ( ! empty( $_REQUEST['s'] ) ) && $search = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) ) {
 			//$_SERVER['REQUEST_URI'] = add_query_arg( 's', $search );
 			$data_filtered = array();
 			foreach ( $data as $item ) {
@@ -467,7 +474,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 		/**
 		 * Handle filter
 		 */
-		if ( ( ! empty( $_REQUEST['filter'] ) ) && $filter = $_REQUEST['filter'] ) {
+		if ( ( ! empty( $_REQUEST['filter'] ) ) && $filter = sanitize_text_field( wp_unslash( $_REQUEST['filter'] ) ) ) {
 			$filters = array_merge( array( '__single_run' ), array_keys( wp_get_schedules() ) );
 			if ( in_array( $filter, $filters ) ) {
 				$data_filtered = array();
@@ -484,8 +491,8 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 		 * This checks for sorting input and sorts the data in our array accordingly.
 		 */
 		function usort_reorder( $a, $b ) {
-			$orderby = ( ! empty( $_REQUEST['orderby'] ) ) ? sanitize_text_field( $_REQUEST['orderby'] ) : 'event'; //If no sort, default to title
-			$order   = ( ! empty( $_REQUEST['order'] ) ) ? sanitize_text_field( $_REQUEST['order'] ) : 'asc'; //If no order, default to asc
+			$orderby = ( ! empty( $_REQUEST['orderby'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'event'; //If no sort, default to title
+			$order   = ( ! empty( $_REQUEST['order'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) : 'asc'; //If no order, default to asc
 
 			//$result = strcmp( $a[ $orderby ], $b[ $orderby ] ); //Determine sort order, case sensitive
 			//$result = strcasecmp( $a[ $orderby ], $b[ $orderby ] ); //Determine sort order, case insensitive
@@ -504,7 +511,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 
 
 		/**
-		 * The WP_List_Table class does not handle pagination for us, so we need
+		 * The WP_List_Table class doesn't handle pagination for us, so we need
 		 * to ensure that the data is trimmed to only the current page. We can use
 		 * array_slice() to
 		 */
@@ -543,77 +550,79 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
                 <tbody id="inlineedit">
                 <tr id="inline-edit" class="inline-edit-row quick-edit-row-page inline-edit-row-page"
                     style="display: none">
-                    <td colspan="<?php echo $this->get_column_count(); ?>" class="colspanchange">
-
-                        <fieldset class="inline-edit-col-left">
-                            <legend class="inline-edit-legend"><?php _e( 'Quick Edit' ); ?></legend>
-                            <div class="inline-edit-col">
-                                <label>
-                                    <span class="title"><?php _e( 'Args', 'leira-cron-jobs' ); ?></span>
-                                    <span class="input-text-wrap">
+                    <td colspan="<?php echo esc_html( $this->get_column_count() ); ?>" class="colspanchange">
+                        <div class="inline-edit-wrapper" role="region">
+                            <fieldset class="inline-edit-col-left">
+                                <legend class="inline-edit-legend"><?php esc_html_e( 'Quick Edit' ); ?></legend>
+                                <div class="inline-edit-col">
+                                    <label>
+                                        <span class="title"><?php esc_html_e( 'Args', 'leira-cron-jobs' ); ?></span>
+                                        <span class="input-text-wrap">
                                         <input class="ptitle" type="text" name="args" value=""/>
                                         <p class="description">
                                             <small>
-									        <?php _e( 'Use a JSON encoded array, e.g. [10] , ["value"] or [10,"mixed","values"]', 'leira-cron-jobs' ) ?>
+									        <?php esc_html_e( 'Use a JSON encoded array, e.g. [10] , ["value"] or [10,"mixed","values"]', 'leira-cron-jobs' ) ?>
                                         </small></p>
                                     </span>
-                                </label>
-                            </div>
-                        </fieldset>
-                        <fieldset class="inline-edit-col-right">
-                            <div class="inline-edit-col">
-                                <input type="hidden" name="event" value=""/>
-                                <input type="hidden" name="_action" value=""/>
-                                <input type="hidden" name="md5" value=""/>
-                                <input type="hidden" name="time" value=""/>
-                                <label>
-                                    <span class="title"><?php _e( 'Schedule', 'leira-cron-jobs' ); ?></span>
-                                    <span class="input-text-wrap">
+                                    </label>
+                                </div>
+                            </fieldset>
+                            <fieldset class="inline-edit-col-right">
+                                <div class="inline-edit-col">
+                                    <input type="hidden" name="event" value=""/>
+                                    <input type="hidden" name="_action" value=""/>
+                                    <input type="hidden" name="md5" value=""/>
+                                    <input type="hidden" name="time" value=""/>
+                                    <label>
+                                        <span class="title"><?php esc_html_e( 'Schedule', 'leira-cron-jobs' ); ?></span>
+                                        <span class="input-text-wrap">
                                         <?php echo $this->get_dropdown_schedules(); ?>
                                     </span>
-                                </label>
-                                <fieldset class="inline-edit-date">
-                                    <legend>
-                                        <span class="title"><?php _e( 'Execution', 'leira-cron-jobs' ); ?></span>
-                                    </legend>
-									<?php echo $this->get_datetime_editor() ?>
-                                </fieldset>
-                                <input type="hidden" name="offset" value=""/>
-                                <br class="clear"/>
-                            </div>
-                        </fieldset>
-						<?php
+                                    </label>
+                                    <fieldset class="inline-edit-date">
+                                        <legend>
+                                            <span class="title"><?php esc_html_e( 'Execution', 'leira-cron-jobs' ); ?></span>
+                                        </legend>
+										<?php echo $this->get_datetime_editor() ?>
+                                    </fieldset>
+                                    <input type="hidden" name="offset" value=""/>
+                                    <br class="clear"/>
+                                </div>
+                            </fieldset>
+							<?php
 
-						$core_columns = array(
-							'cb'          => true,
-							'description' => true,
-							'name'        => true,
-							'slug'        => true,
-							'posts'       => true,
-						);
+							$core_columns = array(
+								'cb'          => true,
+								'description' => true,
+								'name'        => true,
+								'slug'        => true,
+								'posts'       => true,
+							);
 
-						list( $columns ) = $this->get_column_info();
+							list( $columns ) = $this->get_column_info();
 
-						foreach ( $columns as $column_name => $column_display_name ) {
-							if ( isset( $core_columns[ $column_name ] ) ) {
-								continue;
+							foreach ( $columns as $column_name => $column_display_name ) {
+								if ( isset( $core_columns[ $column_name ] ) ) {
+									continue;
+								}
+
+								/** This action is documented in wp-admin/includes/class-wp-posts-list-table.php */
+								do_action( 'quick_edit_custom_box', $column_name, 'edit-cron-job', 0 );
 							}
 
-							/** This action is documented in wp-admin/includes/class-wp-posts-list-table.php */
-							do_action( 'quick_edit_custom_box', $column_name, 'edit-cron-job', 0 );
-						}
+							?>
 
-						?>
-
-                        <div class="inline-edit-save submit">
-                            <button type="button" class="cancel button alignleft"><?php _e( 'Cancel' ); ?></button>
-                            <button type="button"
-                                    class="save button button-primary alignright"><?php _e( 'Save' ); ?></button>
-                            <span class="spinner"></span>
-							<?php wp_nonce_field( 'cronjobinlineeditnonce', '_inline_edit', false ); ?>
-                            <br class="clear"/>
-                            <div class="notice notice-error notice-alt inline hidden">
-                                <p class="error"></p>
+                            <div class="inline-edit-save submit">
+                                <button type="button"
+                                        class="cancel button alignleft"><?php esc_html_e( 'Cancel' ); ?></button>
+                                <button type="button"
+                                        class="save button button-primary alignright"><?php esc_html_e( 'Save' ); ?></button>
+                                <span class="spinner"></span>
+								<?php wp_nonce_field( 'cronjobinlineeditnonce', '_inline_edit', false ); ?>
+                                <br class="clear"/>
+                                <div class="notice notice-error notice-alt inline hidden">
+                                    <p class="error"></p>
+                                </div>
                             </div>
                         </div>
                     </td>
@@ -632,8 +641,8 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 	protected function get_dropdown_schedules() {
 
 		$options = array(
-			//''             => __( 'Select a Schedule', 'leira-cron-jobs' ),
-			'__single_run' => __( 'Single Run', 'leira-cron-jobs' )
+			//''             => esc_html__( 'Select a Schedule', 'leira-cron-jobs' ),
+			'__single_run' => esc_html__( 'Single Run', 'leira-cron-jobs' )
 		);
 
 		$schedules = wp_get_schedules();
@@ -646,7 +655,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 
 		$out = sprintf( '<select name="%s" class="%s">', 'schedule', '' );
 		foreach ( $options as $name => $text ) {
-			$out .= sprintf( '<option value="%s">%s</option>', $name, $text );
+			$out .= sprintf( '<option value="%s">%s</option>', esc_html( $name ), esc_html( $text ) );
 		}
 		$out .= '</select>';
 
@@ -681,25 +690,25 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 		$mn        = ( $edit ) ? mysql2date( 'i', $post_date, false ) : '';
 		$ss        = ( $edit ) ? mysql2date( 's', $post_date, false ) : '';
 
-		$month = '<label><span class="screen-reader-text">' . __( 'Month' ) . '</span><select ' . ( $multi ? '' : 'id="mm" ' ) . 'name="mm"' . $tab_index_attribute . ">\n";
+		$month = '<label><span class="screen-reader-text">' . esc_html__( 'Month' ) . '</span><select ' . ( $multi ? '' : 'id="mm" ' ) . 'name="mm"' . $tab_index_attribute . ">\n";
 		for ( $i = 1; $i < 13; $i = $i + 1 ) {
 			//$monthnum  = zeroise( $i, 2 );
 			$monthnum  = $i;
 			$monthtext = $wp_locale->get_month_abbrev( $wp_locale->get_month( $i ) );
 			$month     .= "\t\t\t" . '<option value="' . $monthnum . '" data-text="' . $monthtext . '" ' . selected( $monthnum, $mm, false ) . '>';
 			/* translators: 1: month number (01, 02, etc.), 2: month abbreviation */
-			$month .= sprintf( __( '%1$s-%2$s' ), $monthnum, $monthtext ) . "</option>\n";
+			$month .= sprintf( esc_html__( '%1$s-%2$s' ), $monthnum, $monthtext ) . "</option>\n";
 		}
 		$month .= '</select></label>';
 
-		$day    = '<label><span class="screen-reader-text">' . __( 'Day' ) . '</span><input type="text" ' . ( $multi ? '' : 'id="jj" ' ) . 'name="jj" value="' . $jj . '" size="2" maxlength="2"' . $tab_index_attribute . ' autocomplete="off" /></label>';
-		$year   = '<label><span class="screen-reader-text">' . __( 'Year' ) . '</span><input type="text" ' . ( $multi ? '' : 'id="aa" ' ) . 'name="aa" value="' . $aa . '" size="4" maxlength="4"' . $tab_index_attribute . ' autocomplete="off" /></label>';
-		$hour   = '<label><span class="screen-reader-text">' . __( 'Hour' ) . '</span><input type="text" ' . ( $multi ? '' : 'id="hh" ' ) . 'name="hh" value="' . $hh . '" size="2" maxlength="2"' . $tab_index_attribute . ' autocomplete="off" /></label>';
-		$minute = '<label><span class="screen-reader-text">' . __( 'Minute' ) . '</span><input type="text" ' . ( $multi ? '' : 'id="mn" ' ) . 'name="mn" value="' . $mn . '" size="2" maxlength="2"' . $tab_index_attribute . ' autocomplete="off" /></label>';
+		$day    = '<label><span class="screen-reader-text">' . esc_html__( 'Day' ) . '</span><input type="text" ' . ( $multi ? '' : 'id="jj" ' ) . 'name="jj" value="' . $jj . '" size="2" maxlength="2"' . $tab_index_attribute . ' autocomplete="off" /></label>';
+		$year   = '<label><span class="screen-reader-text">' . esc_html__( 'Year' ) . '</span><input type="text" ' . ( $multi ? '' : 'id="aa" ' ) . 'name="aa" value="' . $aa . '" size="4" maxlength="4"' . $tab_index_attribute . ' autocomplete="off" /></label>';
+		$hour   = '<label><span class="screen-reader-text">' . esc_html__( 'Hour' ) . '</span><input type="text" ' . ( $multi ? '' : 'id="hh" ' ) . 'name="hh" value="' . $hh . '" size="2" maxlength="2"' . $tab_index_attribute . ' autocomplete="off" /></label>';
+		$minute = '<label><span class="screen-reader-text">' . esc_html__( 'Minute' ) . '</span><input type="text" ' . ( $multi ? '' : 'id="mn" ' ) . 'name="mn" value="' . $mn . '" size="2" maxlength="2"' . $tab_index_attribute . ' autocomplete="off" /></label>';
 
 		$out = '<div class="timestamp-wrap">';
 		/* translators: 1: month, 2: day, 3: year, 4: hour, 5: minute */
-		$out .= sprintf( __( '%1$s %2$s, %3$s @ %4$s:%5$s' ), $month, $day, $year, $hour, $minute );
+		$out .= sprintf( esc_html__( '%1$s %2$s, %3$s @ %4$s:%5$s' ), $month, $day, $year, $hour, $minute );
 
 		$out .= '</div><input type="hidden" id="ss" name="ss" value="' . $ss . '" />';
 
