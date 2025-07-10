@@ -34,7 +34,7 @@ Key features include:
 == Frequently Asked Questions ==
 
 = Can I create new cron jobs with this plugin? =  
-Not at the moment. Leira Cron Jobs allows you to view, edit, run, and delete existing cron jobs, but not create new ones (yet).
+Not at the moment. Cron Jobs allows you to view, edit, run, and delete existing cron jobs, but not create new ones (yet).
 
 = What parts of a cron job can I edit? =  
 You can modify the schedule, next run time, and the arguments passed to the cron hook.
