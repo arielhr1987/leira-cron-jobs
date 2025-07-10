@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Fired during plugin deactivation.
  *
@@ -9,7 +10,7 @@
  * @subpackage Leira_Cron_Jobs/includes
  * @author     Ariel <arielhr1987@gmail.com>
  */
-class Leira_Cron_Jobs_Deactivator {
+class Leira_Cron_Jobs_Deactivator{
 
 	/**
 	 * Short Description. (use period)
@@ -18,8 +19,6 @@ class Leira_Cron_Jobs_Deactivator {
 	 *
 	 * @since    1.0.0
 	 */
-	public static function deactivate() {
-
-	}
+	public static function deactivate() {}
 
 }

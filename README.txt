@@ -1,113 +1,113 @@
 === Cron Jobs ===
-Contributors: arielhr1987, jlcd0894
-Donate link: https://github.com/arielhr1987
-Tags: cron, schedule, event, wp-cron, admin
-Requires at least: 4.1
-Tested up to: 6.6
-Stable tag: 1.2.10
-Requires PHP: 5.4
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Contributors: arielhr1987, jlcd0894  
+Donate link: https://github.com/arielhr1987  
+Tags: cron, scheduler, wp-cron, automation, admin tools  
+Requires at least: 4.1  
+Tested up to: 6.8  
+Stable tag: 1.2.11  
+Requires PHP: 5.4  
+License: GPLv2 or later  
+License URI: https://www.gnu.org/licenses/gpl-2.0.html  
 
-Easily manage your WordPress cron jobs.
+Easily manage and monitor your WordPress cron jobs from a clean, intuitive interface.
 
 == Description ==
 
-Cron Jobs is a simple, but powerful plugin that will help you to manage your site cron jobs easily.
+**Cron Jobs** is a lightweight yet powerful plugin that simplifies the management of your WordPress cron events.
 
-We provide basic actions to manage cron jobs. New features are plan to be available soon
+With this tool, you can quickly view, run, and modify your scheduled tasks (cron jobs) without writing code. It's ideal for developers, site managers, or anyone needing better control over WordPress's background processes.
 
-With the plugin, you will be able to:
+Key features include:
 
-* Run and bulk run selected cron jobs.
-* Quick edit the cron jobs with a simple WordPress like tool directly in the list.
-* Manage your screen display options in the top right corner "Screen Options" section.
-* Get help and documentation about cron jobs.
+* Run or bulk run selected cron jobs instantly.
+* Edit cron job schedule, next run time, and arguments directly from the list view.
+* Customize visible columns and preferences via the native "Screen Options" panel.
+* Access help and documentation to better understand how WordPress cron works.
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/leira-cron-jobs` directory, or install the plugin through the WordPress plugins screen directly.
-2. Activate the plugin through the 'Plugins' screen in WordPress
-3. Go to Tools -> Cron Jobs screen to use plugin
-4. Happy coding :)
+1. Upload the plugin to `/wp-content/plugins/leira-cron-jobs`, or install it directly via the WordPress Plugin Directory.
+2. Activate it from the **Plugins** menu in your WordPress admin.
+3. Navigate to **Tools → Cron Jobs** to start managing your tasks.
+4. That’s it — happy automating!
 
 == Frequently Asked Questions ==
 
-= Can I create new cron jobs with this plugin? =
+= Can I create new cron jobs with this plugin? =  
+Not at the moment. Leira Cron Jobs allows you to view, edit, run, and delete existing cron jobs, but not create new ones (yet).
 
-No. The plugin only allows you to run, edit and delete the current cron job.
+= What parts of a cron job can I edit? =  
+You can modify the schedule, next run time, and the arguments passed to the cron hook.
 
-= What aspects of the cron job will I be able to edit? =
-
-The tool will help you to edit schedule, next execution time and the cron job arguments
-
-= Can I manage WordPress schedules? =
-
-No, At the moment you won't be able to manage schedules, but we plan to have that feature soon.
-
+= Can I manage or create custom schedules? =  
+Currently, no. Managing schedules is not yet supported, but it's a planned feature for a future release.
 
 == Screenshots ==
-1. You will find a new menu item "Cron Jobs" under "Tools" menu.
-2. List of all available cron jobs. Cron jobs without action will be marked in red.
-3. Quick edit any cron job. You will be able to edit cron "arguments", "schedules" and "next run".
-4. Bulk actions for selected cron jobs.
-5. Customize your page in the "Screen Options" section.
-6. Quick information about WordPress cron jobs.
-7. Information about "Screen Options" customization.
-8. Status of your WordPress installation constants.
-9. Search for cron jobs.
-10. You will only be able to delete cron jobs with a missing hook.
+1. Access the "Cron Jobs" screen from the "Tools" menu.
+2. View a list of all registered cron jobs. Jobs without actions appear highlighted in red.
+3. Quickly edit arguments, schedule, and next run time.
+4. Perform bulk actions on selected cron jobs.
+5. Customize the table view via the "Screen Options" menu.
+6. Helpful overview about WordPress cron behavior.
+7. Detailed "Screen Options" explanation.
+8. Display of WordPress constant statuses related to cron.
+9. Use the search bar to filter cron jobs.
+10. Delete only jobs with missing hooks to prevent breaking functionality.
 
 == Changelog ==
 
+= 1.2.11 =
+* Improved the plugin's compatibility with WordPress 6.8
+* New method to handle running cron jobs, ensuring better reliability
+
 = 1.2.10 =
-* WordPress 6.6 compatibility check
-* Fix issue reported by Wordfence
-* Better input sanitization
+* Verified compatibility with WordPress 6.6
+* Fixed security issue reported by Wordfence
+* Improved input sanitization
 
 = 1.2.9 =
-* WordPress 5.9 compatibility check
+* Verified compatibility with WordPress 5.9
 
 = 1.2.8 =
-* WordPress 5.7 compatibility check
+* Verified compatibility with WordPress 5.7
 
 = 1.2.7 =
-* WordPress 5.6 compatibility check
-* Fix bug editing cron job arguments
+* Verified compatibility with WordPress 5.6
+* Fixed a bug when editing cron job arguments
 
 = 1.2.6 =
-* Adding GitHub Action for automatic plugin deploy
-* Adding GitHub Action for automatic update readme.txt and assets
-* Bug fix thanks to ptibogxiv
+* Added GitHub Actions for automated deployment
+* Updated GitHub Actions for syncing readme/assets
+* Bug fix (thanks to ptibogxiv)
 
 = 1.2.5 =
-* Bug fix
+* Minor bug fixes
 
 = 1.2.4 =
-* Bug fix
+* Minor bug fixes
 
 = 1.2.3 =
-* Adding rate us link to footer
-* Notifications are now cookie-based
-* Fix typos
+* Added "Rate us" link in footer
+* Improved notification handling using cookies
+* Fixed typos
 
 = 1.2.2 =
-* Adding spanish language
-* More information about cron jobs in Help tab
+* Added Spanish language support
+* Expanded Help tab with more cron job info
 
 = 1.2.1 =
-* New help information about blue and red list table rows
-* Date time editor CSS fix
+* Added legend for blue/red table rows in the Help tab
+* Fixed date/time editor styling
 
 = 1.2.0 =
-* Plugin refactored
+* Major plugin refactor for improved performance and maintainability
 
 = 1.1.2 =
-* Improve list table sort
+* Improved table sorting functionality
 
 = 1.1.1 =
-* Screenshot 6 updated
-* Source code improvement
+* Updated screenshot 6
+* Source code cleanup
 
 = 1.0.0 =
-* The first plugin release
+* Initial release

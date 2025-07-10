@@ -3,7 +3,7 @@
 /**
  * The admin-specific functionality of the plugin.
  *
- * Defines the plugin name, version, and two examples hooks for how to
+ * Defines the plugin name, version, and two example hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
  * @link       https://github.com/arielhr1987/leira-cron-jobs
@@ -47,8 +47,8 @@ class Leira_Cron_Jobs_Admin{
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param string $plugin_name The name of this plugin.
-	 * @param string $version     The version of this plugin.
+	 * @param  string  $plugin_name  The name of this plugin.
+	 * @param  string  $version  The version of this plugin.
 	 *
 	 * @since    1.0.0
 	 */
@@ -87,23 +87,80 @@ class Leira_Cron_Jobs_Admin{
 	/**
 	 * Register the stylesheets for the admin area.
 	 *
+	 * @param  string  $hook  The current admin page hook.
+	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
-
-	}
+	public function enqueue_styles( $hook ) {}
 
 	/**
 	 * Register the JavaScript for the admin area.
 	 *
+	 * @param  string  $hook  The current admin page hook.
+	 *
+	 * @return void
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_scripts( $hook ) {
 
+		if ( $hook == 'tools_page_leira-cron-jobs' ) {
+			$this->enqueue_asset( 'admin.css' );
+			$this->enqueue_asset( 'admin.js' );
+		}
+	}
+
+	/**
+	 * Enqueue an asset file (JS or CSS) from the build directory.
+	 * This function will automatically include the asset file and its dependencies if available.
+	 *
+	 * @param  string  $filename  The name of the asset file to enqueue, e.g., 'script.js' or 'style.css'.
+	 *
+	 * @return void
+	 */
+	public function enqueue_asset( $filename ) {
+		$extension = strtolower( pathinfo( $filename, PATHINFO_EXTENSION ) );
+
+		// Only allow JS or CSS
+		if ( ! in_array( $extension, [ 'js', 'css' ], true ) ) {
+			return;
+		}
+
+		$handle     = $this->plugin_name . pathinfo( $filename, PATHINFO_FILENAME );
+		$build_dir  = plugin_dir_path( dirname( __FILE__ ) ) . 'build/';
+		$build_url  = plugin_dir_url( dirname( __FILE__ ) ) . 'build/';
+		$asset_path = $build_dir . pathinfo( $filename, PATHINFO_FILENAME ) . '.asset.php';
+		$asset_file = $build_dir . $filename;
+
+		$asset = file_exists( $asset_path )
+			? include $asset_path
+			: [
+				'dependencies' => [],
+				'version'      => file_exists( $asset_file ) ? filemtime( $asset_file ) : false,
+			];
+
+		// Choose the appropriate WordPress function
+		if ( $extension === 'js' ) {
+			wp_enqueue_script(
+				$handle,
+				$build_url . $filename,
+				$asset['dependencies'],
+				$asset['version'],
+				true // Load in footer
+			);
+		} else {
+			wp_enqueue_style(
+				$handle,
+				$build_url . $filename,
+				[], //$asset['dependencies'],
+				$asset['version']
+			);
+		}
 	}
 
 	/**
 	 * Add the admin menu item
+	 *
+	 * @return void
 	 */
 	public function admin_menu() {
 		$hook = add_management_page(
@@ -120,6 +177,8 @@ class Leira_Cron_Jobs_Admin{
 
 	/**
 	 * Render the admin page
+	 *
+	 * @return void
 	 */
 	public function render_admin_page() {
 		if ( ! current_user_can( $this->capability ) ) {
@@ -128,13 +187,14 @@ class Leira_Cron_Jobs_Admin{
 
 		?>
 
-        <div class="wrap">
-            <h1 class="wp-heading-inline"><?php echo esc_html__( 'Cron Jobs', 'leira-cron-jobs' ) ?></h1>
-            <!--<a href="#" class="page-title-action">--><?php //_e( 'Add New', 'leira-cron-jobs' ) ?><!--</a>-->
+		<div class="wrap">
+			<h1 class="wp-heading-inline"><?php echo esc_html__( 'Cron Jobs', 'leira-cron-jobs' ) ?></h1>
+			<!--<a href="#" class="page-title-action">--><?php //_e( 'Add New', 'leira-cron-jobs' ) ?><!--</a>-->
 			<?php
 			if ( isset( $_REQUEST['s'] ) && $search = esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) ) ) {
 				/* translators: %s: search keywords */
-				printf( ' <span class="subtitle">' . esc_html__( 'Search results for &#8220;%s&#8221;', 'leira-cron-jobs' ) . '</span>', esc_html( $search ) );
+				printf( ' <span class="subtitle">' . esc_html__( 'Search results for &#8220;%s&#8221;',
+						'leira-cron-jobs' ) . '</span>', esc_html( $search ) );
 			}
 
 			//the cron job table instance
@@ -142,43 +202,36 @@ class Leira_Cron_Jobs_Admin{
 			$table->prepare_items();
 			$this->admin_notices();
 			?>
-            <hr class="wp-header-end">
-            <h2 class="screen-reader-text"><?php esc_html_e( 'Filter cron jobs list', 'leira-cron-jobs' ) ?></h2>
-            <form action="<?php echo esc_url( add_query_arg( '', '' ) ) ?>" method="post">
+			<hr class="wp-header-end">
+			<h2 class="screen-reader-text"><?php esc_html_e( 'Filter cron jobs list', 'leira-cron-jobs' ) ?></h2>
+			<form action="<?php echo esc_url( add_query_arg( '', '' ) ) ?>" method="post">
 				<?php
 				$table->search_box( esc_html__( 'Search Events', 'leira-cron-jobs' ), 'event' );
 				$table->views();
 				$table->display(); //Display the table
 				?>
-            </form>
+			</form>
 			<?php if ( $table->has_items() ): ?>
-                <form method="get">
+				<form method="get">
 					<?php $table->inline_edit() ?>
-                </form>
+				</form>
 			<?php endif; ?>
-        </div>
+		</div>
 
 		<?php
 	}
 
 	/**
-	 * On admin page load. Add content to the page
+	 * On the admin page load. Add content to the page
+	 *
+	 * @return void
 	 */
 	public function admin_page_load() {
 		if ( ! current_user_can( $this->capability ) ) {
 			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'leira-cron-jobs' ) );
 		}
 
-		//enqueue styles
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/leira-cron-jobs-admin.css', array(), $this->version, 'all' );
-
-		//enqueue scripts
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/leira-cron-jobs-admin.min.js', array(
-			'jquery',
-			'wp-a11y'
-		), $this->version, false );
-
-		//initialize table here to be able to register default WP_List_Table screen options
+		//initialize the table here to be able to register default WP_List_Table screen options
 		$this->get_list_table();
 
 		//handle bulk and simple actions
@@ -196,9 +249,12 @@ class Leira_Cron_Jobs_Admin{
 				'id'      => 'overview',
 				'title'   => __( 'Overview', 'leira-cron-jobs' ),
 				'content' =>
-					'<p>' . __( 'Cron is the time-based task scheduling system that is available on UNIX systems. WP-Cron is how WordPress handles scheduling time-based tasks in WordPress. Several WordPress core features, such as checking for updates and publishing scheduled post, utilize WP-Cron.', 'leira-cron-jobs' ) . '</p>' .
-					'<p>' . __( 'WP-Cron works by: on every page load, a list of scheduled tasks is checked to see what needs to be run. Any tasks scheduled to be run will be run during that page load. WP-Cron does not run constantly as the system cron does; it is only triggered on page load. Scheduling errors could occur if you schedule a task for 2:00PM and no page loads occur until 5:00PM.', 'leira-cron-jobs' ) . '</p>' .
-					'<p>' . __( 'In the scenario where a site may not receive enough visits to execute scheduled tasks in a timely manner, you can call directly or via a server CRON daemon for X number of times the file <strong>wp-cron.php</strong> located in your Wordpress installation root folder.', 'leira-cron-jobs' ) . '</p>' .
+					'<p>' . __( 'Cron is the time-based task scheduling system that is available on UNIX systems. WP-Cron is how WordPress handles scheduling time-based tasks in WordPress. Several WordPress core features, such as checking for updates and publishing scheduled post, utilize WP-Cron.',
+						'leira-cron-jobs' ) . '</p>' .
+					'<p>' . __( 'WP-Cron works by: on every page load, a list of scheduled tasks is checked to see what needs to be run. Any tasks scheduled to be run will be run during that page load. WP-Cron does not run constantly as the system cron does; it is only triggered on page load. Scheduling errors could occur if you schedule a task for 2:00PM and no page loads occur until 5:00PM.',
+						'leira-cron-jobs' ) . '</p>' .
+					'<p>' . __( 'In the scenario where a site may not receive enough visits to execute scheduled tasks in a timely manner, you can call directly or via a server CRON daemon for X number of times the file <strong>wp-cron.php</strong> located in your WordPress installation root folder.',
+						'leira-cron-jobs' ) . '</p>' .
 					'',
 			)
 		);
@@ -207,14 +263,21 @@ class Leira_Cron_Jobs_Admin{
 				'id'      => 'screen-content',
 				'title'   => __( 'Screen Content', 'leira-cron-jobs' ),
 				'content' =>
-					'<p>' . __( 'You can customize the display of this screen&#8217;s contents in a number of ways:', 'leira-cron-jobs' ) . '</p>' .
+					'<p>' . __( 'You can customize the display of this screen&#8217;s contents in a number of ways:',
+						'leira-cron-jobs' ) . '</p>' .
 					'<ul>' .
-					'<li>' . __( 'You can hide/display columns based on your needs and decide how many cron jobs to list per screen using the <strong>Screen Options</strong> tab.', 'leira-cron-jobs' ) . '</li>' .
-					'<li>' . __( 'You can filter the list of cron jobs by schedule using the text links above the list to only show those with that status. The default view is to show all.', 'leira-cron-jobs' ) . '</li>' .
-					'<li>' . __( 'The <strong>Search Events</strong> button will search for crons containing the text you type in the box.', 'leira-cron-jobs' ) . '</li>' .
-					'<li>' . __( 'The cron jobs marked as red in the list table are <strong>orphan cron jobs</strong>, which mean they are scheduled but are not executing any code. This happen mostly when you deactivate a plugin that previously schedule a cron job.', 'leira-cron-jobs' ) . '</li>' .
-					'<li>' . __( '<strong>Orphan cron jobs</strong> can only be deleted.', 'leira-cron-jobs' ) . '</li>' .
-					'<li>' . __( 'Those cron jobs marked as blue in the list table are being executed at the moment.', 'leira-cron-jobs' ) . '</li>' .
+					'<li>' . __( 'You can hide/display columns based on your needs and decide how many cron jobs to list per screen using the <strong>Screen Options</strong> tab.',
+						'leira-cron-jobs' ) . '</li>' .
+					'<li>' . __( 'You can filter the list of cron jobs by schedule using the text links above the list to only show those with that status. The default view is to show all.',
+						'leira-cron-jobs' ) . '</li>' .
+					'<li>' . __( 'The <strong>Search Events</strong> button will search for crons containing the text you type in the box.',
+						'leira-cron-jobs' ) . '</li>' .
+					'<li>' . __( 'The cron jobs marked as red in the list table are <strong>orphan cron jobs</strong>, which mean they are scheduled but are not executing any code. This happens mostly when you deactivate a plugin that previously schedules a cron job.',
+						'leira-cron-jobs' ) . '</li>' .
+					'<li>' . __( '<strong>Orphan cron jobs</strong> can only be deleted.',
+						'leira-cron-jobs' ) . '</li>' .
+					'<li>' . __( 'Those cron jobs marked as blue in the list table are being executed at the moment.',
+						'leira-cron-jobs' ) . '</li>' .
 					'</ul>'
 			)
 		);
@@ -229,16 +292,20 @@ class Leira_Cron_Jobs_Admin{
 		}
 
 		$status .= '<ul>' .
-		           //'<li><div class="notice notice-error notice-alt inline"><p class="error">0</p> </div></li>'.
-		           /*
+				   //'<li><div class="notice notice-error notice-alt inline"><p class="error">0</p> </div></li>'.
+				   /*
 					* translators: The value of the constant DISABLE_WP_CRON
 					*/
-		           '<li>' . sprintf( __( '<strong>DISABLE_WP_CRON</strong> constant is set to <strong>%s</strong>. ', 'leira-cron-jobs' ), $disable_cron ? 'TRUE' : 'FALSE' ) . ( $disable_cron ? __( 'Make sure to create a server CRON daemon that points to the file <strong>wp-cron.php</strong> located in your Wordpress installation root folder', 'leira-cron-jobs' ) : '' ) . '</li>' .
-		           /*
-		            * translators: The value of the constant ALTERNATE_WP_CRON
-		            */
-		           '<li>' . sprintf( __( '<strong>ALTERNATE_WP_CRON</strong> constant is set to <strong>%s</strong>. ', 'leira-cron-jobs' ), $alternate_cron ? 'TRUE' : 'FALSE' ) . '</li>' .
-		           '<ul>';
+				   '<li>' . sprintf( __( '<strong>DISABLE_WP_CRON</strong> constant is set to <strong>%s</strong>. ',
+				'leira-cron-jobs' ),
+				$disable_cron ? 'TRUE' : 'FALSE' ) . ( $disable_cron ? __( 'Make sure to create a server CRON daemon that points to the file <strong>wp-cron.php</strong> located in your WordPress installation root folder',
+				'leira-cron-jobs' ) : '' ) . '</li>' .
+				   /*
+					* translators: The value of the constant ALTERNATE_WP_CRON
+					*/
+				   '<li>' . sprintf( __( '<strong>ALTERNATE_WP_CRON</strong> constant is set to <strong>%s</strong>. ',
+				'leira-cron-jobs' ), $alternate_cron ? 'TRUE' : 'FALSE' ) . '</li>' .
+				   '<ul>';
 
 		get_current_screen()->add_help_tab(
 			array(
@@ -256,7 +323,8 @@ class Leira_Cron_Jobs_Admin{
 			/*
 			 * translators: The scheduled time to execute the cron
 			 */
-			$schedules .= '<li>' . sprintf( __( '<strong>%1$s</strong>: Every %2$s. ', 'leira-cron-jobs' ), $schedule['display'], $human_readable ) . '</li>';
+			$schedules .= '<li>' . sprintf( __( '<strong>%1$s</strong>: Every %2$s. ', 'leira-cron-jobs' ),
+					$schedule['display'], $human_readable ) . '</li>';
 		}
 		$schedules .= '<ul>';
 
@@ -270,9 +338,12 @@ class Leira_Cron_Jobs_Admin{
 
 		get_current_screen()->set_help_sidebar(
 			'<p><strong>' . __( 'For more information:', 'leira-cron-jobs' ) . '</strong></p>' .
-			'<p>' . __( '<a href="https://developer.wordpress.org/plugins/cron/">Documentation on Crons</a>', 'leira-cron-jobs' ) . '</p>' .
-			'<p>' . __( '<a href="https://wordpress.org/support/">Support</a>', 'leira-cron-jobs' ) . '</p>' . //TODO: Change to github plugin page
-			'<p>' . __( '<a href="https://github.com/arielhr1987/leira-cron-jobs/issues">Report an issue</a>', 'leira-cron-jobs' ) . '</p>'
+			'<p>' . __( '<a href="https://developer.wordpress.org/plugins/cron/">Documentation on Cron Jobs</a>',
+				'leira-cron-jobs' ) . '</p>' .
+			'<p>' . __( '<a href="https://wordpress.org/support/">Support</a>',
+				'leira-cron-jobs' ) . '</p>' . //TODO: Change to github plugin page
+			'<p>' . __( '<a href="https://github.com/arielhr1987/leira-cron-jobs/issues">Report an issue</a>',
+				'leira-cron-jobs' ) . '</p>'
 		);
 
 		get_current_screen()->set_screen_reader_content(
@@ -285,7 +356,7 @@ class Leira_Cron_Jobs_Admin{
 	}
 
 	/**
-	 * Filter the per_page screen option fot the admin list table
+	 * Filter the per_page screen option for the admin list table
 	 *
 	 * @param $false
 	 * @param $option
@@ -313,7 +384,8 @@ class Leira_Cron_Jobs_Admin{
 		if ( ! empty( $action ) ) {
 
 			$query_arg = '_wpnonce';
-			$checked   = isset( $_REQUEST[ $query_arg ] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST[ $query_arg ] ) ), 'bulk-cron-jobs' );
+			$checked   = isset( $_REQUEST[ $query_arg ] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST[ $query_arg ] ) ),
+					'bulk-cron-jobs' );
 
 			if ( ! $checked ) {
 				//no action to handle, just show the page
@@ -330,23 +402,27 @@ class Leira_Cron_Jobs_Admin{
 				);
 				$redirect = add_query_arg( $params, admin_url( 'tools.php' ) );
 			}
-			$jobs = isset( $_REQUEST['job'] ) && is_array( $_REQUEST['job'] ) ? wp_unslash( $_REQUEST['job'] )  : array();
+			$jobs = isset( $_REQUEST['job'] ) && is_array( $_REQUEST['job'] ) ? wp_unslash( $_REQUEST['job'] ) : array();
 
 			if ( empty( $jobs ) ) {
 				//No jobs to execute action
-				$this->enqueue_message( 'error', __( 'You most select at least one cron job to perform this action', 'leira-cron-jobs' ) );
+				$this->enqueue_message( 'error',
+					__( 'You most select at least one cron job to perform this action', 'leira-cron-jobs' ) );
 			} else {
 				//action logic.
 				switch ( $action ) {
 					case 'run':
-						$manager->bulk_run( $jobs );
-						$this->enqueue_message( 'success', __( 'The selected cron jobs are being executed at this moment', 'leira-cron-jobs' ) );
+						//$manager->bulk_run( $jobs );
+						$manager->run($jobs);
+						$this->enqueue_message( 'success',
+							__( 'The selected cron jobs are being executed at this moment', 'leira-cron-jobs' ) );
 						wp_safe_redirect( $redirect );
 						die();
 						break;
 					case 'delete':
 						$manager->bulk_delete( $jobs );
-						$this->enqueue_message( 'success', __( 'Selected cron jobs were successfully deleted', 'leira-cron-jobs' ) );
+						$this->enqueue_message( 'success',
+							__( 'Selected cron jobs were successfully deleted', 'leira-cron-jobs' ) );
 						wp_safe_redirect( $redirect );
 						die();
 						break;
@@ -367,6 +443,7 @@ class Leira_Cron_Jobs_Admin{
 	/**
 	 * Handle Quick Edit action.
 	 * A Cron Job is edited by deleting the current one and creating a new one with the new parameters.
+	 * @throws DateInvalidTimeZoneException
 	 */
 	public function ajax_save() {
 		/**
@@ -380,7 +457,8 @@ class Leira_Cron_Jobs_Admin{
 		 * Check nonce
 		 */
 		$query_arg = '_inline_edit';
-		$checked   = isset( $_REQUEST[ $query_arg ] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST[ $query_arg ] ) ), 'cronjobinlineeditnonce' );
+		$checked   = isset( $_REQUEST[ $query_arg ] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST[ $query_arg ] ) ),
+				'cronjobinlineeditnonce' );
 		if ( ! $checked ) {
 			wp_die( esc_html__( 'Your link has expired, refresh the page and try again.', 'leira-cron-jobs' ) );
 		}
@@ -415,7 +493,8 @@ class Leira_Cron_Jobs_Admin{
 			$schedules                 = wp_get_schedules();
 			$schedules['__single_run'] = array();
 			if ( $key === 'schedule' && $schedules = wp_get_schedules() && ! isset( $schedules[ $request_value ] ) ) {
-				wp_die( esc_html__( 'Incorrect schedule. Please select a valid schedule from the dropdown menu and try again.', 'leira-cron-jobs' ) );
+				wp_die( esc_html__( 'Incorrect schedule. Please select a valid schedule from the dropdown menu and try again.',
+					'leira-cron-jobs' ) );
 			}
 			if ( $key == 'aa' ) {
 
@@ -426,22 +505,26 @@ class Leira_Cron_Jobs_Admin{
 		 * Validate execution datetime input data
 		 */
 		$format        = 'Y-m-d H:i:s';
-		$date_str      = sprintf( '%s-%s-%s %s:%s:%s', $values['aa'], $values['mm'], $values['jj'], $values['hh'], $values['mn'], $values['ss'] );
+		$date_str      = sprintf( '%s-%s-%s %s:%s:%s', $values['aa'], $values['mm'], $values['jj'], $values['hh'],
+			$values['mn'], $values['ss'] );
 		$timezone_name = timezone_name_from_abbr( '', ( 0 - $values['offset'] ) * 60, 1 );
 		try{
 			$timezone = new DateTimeZone( $timezone_name );
-		}catch( Exception $e ){
+		}catch ( Exception $e ){
 			//UTC by default
 			$timezone = new DateTimeZone( 'UTC' );
 		}
 		$date = DateTime::createFromFormat( $format, $date_str, $timezone );
 
 		if ( $date && $date->format( $format ) === $date_str ) {
-			// The Y ( 4 digits year ) returns TRUE for any integer with any number of digits so changing the comparison from == to === fixes the issue.
+			// The Y (a 4-digit year)
+			//returns TRUE for any integer with any number of digits,
+			//so changing the comparison from == to === fixes the issue.
 			//date time is valid
 		} else {
 			//invalid date time information
-			wp_die( esc_html__( 'Invalid "Execution" datetime. Please select a valid datetime and try again.', 'leira-cron-jobs' ) );
+			wp_die( esc_html__( 'Invalid "Execution" datetime. Please select a valid datetime and try again.',
+				'leira-cron-jobs' ) );
 		}
 		//convert to UTC
 		$date->setTimezone( new DateTimeZone( timezone_name_from_abbr( '', 0, 1 ) ) );
@@ -450,19 +533,28 @@ class Leira_Cron_Jobs_Admin{
 		 * Edit the Cron Job
 		 */
 
-		/** @var Leira_Cron_Jobs_Manager $manager */
+		/**
+		 * @var Leira_Cron_Jobs_Manager $manager
+		 */
 		$manager = leira_cron_jobs()->manager;
 		$args    = isset( $_REQUEST['args'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['args'] ) ) : '';
-		//$args    = stripslashes( $args );
-		$args = @json_decode( $args, true );
+		$args    = @json_decode( $args, true );
 		if ( ! is_array( $args ) ) {
 			$args = array();
 		}
-		$edited = $manager->edit( $values['event'], $values['md5'], $values['time'], $values['schedule'], $date->format( 'U' ), $args );
+		$edited = $manager->edit(
+			$values['event'],
+			$values['md5'],
+			$values['time'],
+			$values['schedule'],
+			$date->format( 'U' ),
+			$args
+		);
 
 		if ( ! $edited ) {
-			//The cron job does not exist or WP wasn't able to create it
-			wp_die( esc_html__( 'An Error occurred while editing the cron job. Refresh the page and try again.', 'leira-cron-jobs' ) );
+			//The cron job does not exist, or WP wasn't able to create it
+			wp_die( esc_html__( 'An Error occurred while editing the cron job. Refresh the page and try again.',
+				'leira-cron-jobs' ) );
 		}
 
 		/**
@@ -501,9 +593,9 @@ class Leira_Cron_Jobs_Admin{
 	}
 
 	/**
-	 * Convert seconds to human readable string
+	 * Convert seconds to human-readable string
 	 *
-	 * @param integer $seconds
+	 * @param  integer  $seconds
 	 *
 	 * @return string
 	 */
@@ -552,19 +644,20 @@ class Leira_Cron_Jobs_Admin{
 			if ( ! get_option( 'leira-cron-jobs-footer-rated' ) ) {
 
 				ob_start(); ?>
-                <a href="https://wordpress.org/support/plugin/leira-cron-jobs/reviews/?filter=5" target="_blank"
-                   class="leira-cron-jobs-admin-rating-link"
-                   data-rated="<?php esc_attr_e( 'Thanks :)', 'leira-cron-jobs' ) ?>"
-                   data-nonce="<?php echo esc_html( wp_create_nonce( 'footer-rated' ) ) ?>">
-                    &#9733;&#9733;&#9733;&#9733;&#9733;
-                </a>
+				<a href="https://wordpress.org/support/plugin/leira-cron-jobs/reviews/?filter=5" target="_blank"
+				   class="leira-cron-jobs-admin-rating-link"
+				   data-rated="<?php esc_attr_e( 'Thanks :)', 'leira-cron-jobs' ) ?>"
+				   data-nonce="<?php echo esc_html( wp_create_nonce( 'footer-rated' ) ) ?>">
+					&#9733;&#9733;&#9733;&#9733;&#9733;
+				</a>
 				<?php $link = ob_get_clean();
 				ob_start();
 
 				/*
 				 * translators: The link to review the plugin
 				 */
-				printf( esc_html__( 'If you like Cron Jobs please consider leaving a %s review. It will help us to grow the plugin and make it more popular. Thank you.', 'leira-cron-jobs' ), wp_kses_post( $link ) ) ?>
+				printf( esc_html__( 'If you like Cron Jobs please consider leaving a %s review. It will help us to grow the plugin and make it more popular. Thank you.',
+					'leira-cron-jobs' ), wp_kses_post( $link ) ) ?>
 
 				<?php $footer_text = ob_get_clean();
 			}
@@ -574,7 +667,7 @@ class Leira_Cron_Jobs_Admin{
 	}
 
 	/**
-	 * When user clicks the review link in backend
+	 * When the user clicks the review link in the backend
 	 *
 	 * @since 1.2.3
 	 */
@@ -583,7 +676,8 @@ class Leira_Cron_Jobs_Admin{
 		 * Check capabilities
 		 */
 		if ( ! current_user_can( $this->capability ) ) {
-			wp_send_json_error( __( 'You do not have sufficient permissions to perform this action.', 'leira-cron-jobs' ) );
+			wp_send_json_error( __( 'You do not have sufficient permissions to perform this action.',
+				'leira-cron-jobs' ) );
 		}
 
 		/**
@@ -591,7 +685,8 @@ class Leira_Cron_Jobs_Admin{
 		 */
 		$action    = 'footer-rated';
 		$query_arg = '_wpnonce';
-		$checked   = isset( $_REQUEST[ $query_arg ] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST[ $query_arg ] ) ), $action );
+		$checked   = isset( $_REQUEST[ $query_arg ] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST[ $query_arg ] ) ),
+				$action );
 		if ( ! $checked ) {
 			wp_send_json_error( __( 'Your link has expired, refresh the page and try again.', 'leira-cron-jobs' ) );
 		}

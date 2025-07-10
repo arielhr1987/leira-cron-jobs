@@ -14,7 +14,7 @@
  * @subpackage Leira_Cron_Jobs/includes
  * @author     Ariel <arielhr1987@gmail.com>
  *
- * @property Leira_Cron_Jobs_Manager       manager
+ * @property Leira_Cron_Jobs_Manager manager
  * @property Leira_Cron_Jobs_Notifications notify
  */
 class Leira_Cron_Jobs{
@@ -128,12 +128,6 @@ class Leira_Cron_Jobs{
 			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-leira-cron-jobs-notifications.php';
 		}
 
-		/**
-		 * The class responsible for defining all actions that occur in the public-facing
-		 * side of the site.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-leira-cron-jobs-public.php';
-
 		$this->loader = new Leira_Cron_Jobs_Loader();
 
 	}
@@ -141,7 +135,7 @@ class Leira_Cron_Jobs{
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
-	 * Uses the Leira_Cron_Jobs_i18n class in order to set the domain and to register the hook
+	 * Uses the Leira_Cron_Jobs_i18n class to set the domain and to register the hook
 	 * with WordPress.
 	 *
 	 * @since    1.0.0
@@ -157,7 +151,7 @@ class Leira_Cron_Jobs{
 	}
 
 	/**
-	 * Register all of the hooks related to the admin area functionality
+	 * Register all the hooks related to the admin area functionality
 	 * of the plugin.
 	 *
 	 * @since    1.0.0
@@ -191,18 +185,16 @@ class Leira_Cron_Jobs{
 	}
 
 	/**
-	 * Register all of the hooks related to the public-facing functionality
+	 * Register all the hooks related to the public-facing functionality
 	 * of the plugin.
 	 *
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	protected function define_public_hooks() {
-
-	}
+	protected function define_public_hooks() {}
 
 	/**
-	 * Run the loader to execute all of the hooks with WordPress.
+	 * Run the loader to execute all the hooks with WordPress.
 	 *
 	 * @since    1.0.0
 	 */
@@ -249,7 +241,7 @@ class Leira_Cron_Jobs{
 	/**
 	 * Gets an instance from the loader
 	 *
-	 * @param string $key
+	 * @param  string  $key
 	 *
 	 * @return mixed|null The instance
 	 *
@@ -264,8 +256,8 @@ class Leira_Cron_Jobs{
 	/**
 	 * Sets an instance in the loader
 	 *
-	 * @param string $key
-	 * @param mixed  $value
+	 * @param  string  $key
+	 * @param  mixed  $value
 	 *
 	 * @since     1.2.0
 	 * @access    public

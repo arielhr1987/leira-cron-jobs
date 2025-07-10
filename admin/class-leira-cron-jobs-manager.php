@@ -3,7 +3,7 @@
 /**
  * The admin-specific functionality of the plugin.
  *
- * Defines the plugin name, version, and two examples hooks for how to
+ * Defines the plugin name, version, and two example hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
  * @link       https://github.com/arielhr1987/leira-cron-jobs
@@ -29,7 +29,7 @@ class Leira_Cron_Jobs_Manager{
 			$items = ( is_array( $cron ) ? $cron : array() );
 		}
 
-		$arr = array();
+		$events = array();
 		foreach ( $items as $time => $tasks ) {
 
 			foreach ( $tasks as $name => $task ) {
@@ -45,7 +45,7 @@ class Leira_Cron_Jobs_Manager{
 						$options |= JSON_PRETTY_PRINT;
 					}
 
-					$arr[] = array(
+					$events[] = array(
 						'event'    => $name,
 						'action'   => $this->get_cron_action( $name ),
 						//or use wp_json_encode( $details['args'], $options )
@@ -58,13 +58,13 @@ class Leira_Cron_Jobs_Manager{
 			}
 		}
 
-		return $arr;
+		return $events;
 	}
 
 	/**
 	 * Get a defined cron job
 	 *
-	 * @return array|bool Returns an array containing all the information of the cron job  or false if it wasn't found
+	 * @return array|bool Returns an array containing all the information of the cron job or false if it wasn't found
 	 */
 	public function get_cron() {
 
@@ -150,7 +150,52 @@ class Leira_Cron_Jobs_Manager{
 	 *
 	 * Executes an event by scheduling a new single event with the same arguments.
 	 *
-	 * @param array $jobs
+	 * @param  array  $jobs  The events to execute, where the key is the timestamp and the value is an array of events with their MD5 signatures.
+	 *
+	 * @return bool
+	 */
+	public function run( $jobs ) {
+		if ( ! is_array( $jobs ) ) {
+
+			return false;
+		}
+		//The currently running events
+		$events = _get_cron_array();
+
+		delete_transient( 'doing_cron' );
+
+		if ( ! defined( 'DOING_CRON' ) ) {
+			define( 'DOING_CRON', true );
+		}
+
+		foreach ( $jobs as $timestamp => $job ) {
+			$job = (array) $job; //Avoid the warning "Invalid argument supplied for foreach()"
+			foreach ( $job as $hook => $md5 ) {
+				if ( isset( $events[ $timestamp ][ $hook ][ $md5 ] ) ) {
+					$args     = $events[ $timestamp ][ $hook ][ $md5 ]['args'];
+					$schedule = isset( $events[ $timestamp ][ $hook ][ $md5 ]['schedule'] ) ?
+						$events[ $timestamp ][ $hook ][ $md5 ]['schedule'] : false;
+
+					if ( false !== $schedule ) {
+						wp_reschedule_event( $timestamp, $schedule, $hook, $args );
+					}
+
+					wp_unschedule_event( $timestamp, $hook, $args );
+
+					do_action_ref_array( $hook, $args );
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Executes a list of cron jobs immediately.
+	 *
+	 * Executes an event by scheduling a new single event with the same arguments.
+	 *
+	 * @param  array  $jobs
 	 *
 	 * @return bool
 	 */
@@ -160,30 +205,30 @@ class Leira_Cron_Jobs_Manager{
 
 			return false;
 		}
-		$crons = _get_cron_array();
+		$events = _get_cron_array();
 
 		delete_transient( 'doing_cron' );
 		foreach ( $jobs as $timestamp => $job ) {
-			$job = (array) $job; //Avoid warning "Invalid argument supplied for foreach()"
+			$job = (array) $job; //Avoid the warning "Invalid argument supplied for foreach()"
 			foreach ( $job as $event => $md5 ) {
-				if ( isset( $crons[ $timestamp ][ $event ][ $md5 ] ) ) {
-					$args = $crons[ $timestamp ][ $event ][ $md5 ]['args'];
+				if ( isset( $events[ $timestamp ][ $event ][ $md5 ] ) ) {
+					$args = $events[ $timestamp ][ $event ][ $md5 ]['args'];
 					/**
-					 * Wordpress will not schedule an event if the execution time is withing the next 10 minutes.
+					 * WordPress will not schedule an event if the execution time is withing the next 10 minutes.
 					 * We have some other ways to "run" the cron job
 					 *
 					 * 1- Use do_action_ref_array method to call the action directly.
-					 *    The problem with this implementation is that long running actions will slowdown the page load.
+					 *    The problem with this implementation is that long-running actions will slow down the page load.
 					 *    NOT A GOOD IDEA
 					 *
-					 * 2- Schedule a single event that points to an action actually triggers the cron job.
+					 * 2- Schedule a single event that points to an action that actually triggers the cron job.
 					 *
 					 * 3- Schedule a single event using wp_schedule_single_event. If you want to run an event that
-					 *    is about to be executed in the next 10 minutes Wordpress will NOT schedule that event
+					 *    is about to be executed in the next 10 minutes, WordPress will NOT schedule that event
 					 *
 					 * 4- If the event is about to be executed in the next 10 minutes, them reschedule the event for now
 					 *
-					 * 5- schedule a single event without using wp_schedule_single_event function and avoid the 10 minutes error
+					 * 5- schedule a single event without using wp_schedule_single_event function and avoid the 10-minute error
 					 *
 					 * 6- Simple reschedule the event
 					 */
@@ -196,7 +241,7 @@ class Leira_Cron_Jobs_Manager{
 						continue;
 					}
 
-					$crons[ time() - 1 ][ $event ][ $md5 ] = array(
+					$events[ time() - 1 ][ $event ][ $md5 ] = array(
 						'schedule' => false, //single run
 						'args'     => $args,
 					);
@@ -206,12 +251,12 @@ class Leira_Cron_Jobs_Manager{
 		/**
 		 * Sort the array
 		 */
-		uksort( $crons, 'strnatcasecmp' );
+		uksort( $events, 'strnatcasecmp' );
 
 		/**
 		 * Add new events to the cron schedule array
 		 */
-		$res = _set_cron_array( $crons );
+		$res = _set_cron_array( $events );
 
 		/**
 		 * Trigger cron jobs
@@ -224,19 +269,19 @@ class Leira_Cron_Jobs_Manager{
 	/**
 	 * Deletes a cron job.
 	 *
-	 * @param array $jobs
+	 * @param  array  $jobs
 	 *
 	 * @return bool
 	 */
 	public function bulk_delete( $jobs ) {
-		$crons = _get_cron_array();
+		$jobs   = (array) $jobs;
+		$events = _get_cron_array();
 
-		$jobs = (array) $jobs;
 		foreach ( $jobs as $time => $job ) {
-			$job = (array) $job; //Avoid warning "Invalid argument supplied for foreach()"
+			$job = (array) $job; //Avoid the warning "Invalid argument supplied for foreach()"
 			foreach ( $job as $name => $md5 ) {
-				if ( isset( $crons[ $time ][ $name ][ $md5 ] ) ) {
-					$args = $crons[ $time ][ $name ][ $md5 ]['args'];
+				if ( isset( $events[ $time ][ $name ][ $md5 ] ) ) {
+					$args = $events[ $time ][ $name ][ $md5 ]['args'];
 					wp_unschedule_event( $time, $name, $args );
 				}
 			}
@@ -246,12 +291,34 @@ class Leira_Cron_Jobs_Manager{
 	}
 
 	/**
+	 * Deletes a cron job.
+	 *
+	 * @param  string  $job  The hook name of the event to delete.
+	 * @param  string  $md5  The cron event signature.
+	 * @param  string  $time  The GMT time that the event would be run at.
+	 *
+	 * @return bool
+	 */
+	public function delete( $job, $md5, $time ) {
+		$events = _get_cron_array();
+
+		if ( ! isset( $events[ $time ][ $job ][ $md5 ] ) ) {
+			return false;
+		}
+
+		$args = $events[ $time ][ $job ][ $md5 ]['args'];
+		wp_unschedule_event( $time, $job, $args );
+
+		return true;
+	}
+
+	/**
 	 * Adds a new cron job.
 	 *
-	 * @param int    $time     A GMT time that the event should be run at.
-	 * @param string $schedule The recurrence of the cron event.
-	 * @param string $hookname The name of the hook to execute.
-	 * @param array  $args     Arguments to add to the cron event.
+	 * @param  int  $time  A GMT time that the event should be run at.
+	 * @param  string  $schedule  The recurrence of the cron event.
+	 * @param  string  $hookname  The name of the hook to execute.
+	 * @param  array  $args  Arguments to add to the cron event.
 	 *
 	 * @return bool
 	 */
@@ -267,35 +334,14 @@ class Leira_Cron_Jobs_Manager{
 	}
 
 	/**
-	 * Deletes a cron job.
-	 *
-	 * @param string $job  The hook name of the event to delete.
-	 * @param string $md5  The cron event signature.
-	 * @param string $time The GMT time that the event would be run at.
-	 *
-	 * @return bool
-	 */
-	public function delete( $job, $md5, $time ) {
-		$crons = _get_cron_array();
-		if ( isset( $crons[ $time ][ $job ][ $md5 ] ) ) {
-			$args = $crons[ $time ][ $job ][ $md5 ]['args'];
-			wp_unschedule_event( $time, $job, $args );
-
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Edits a cron job
 	 *
-	 * @param string $job
-	 * @param string $md5
-	 * @param int    $time
-	 * @param string $new_schedule The new schedule for the cron job
-	 * @param int    $new_time     The new execution time
-	 * @param array  $new_args     The new arguments to pass to the action
+	 * @param  string  $job
+	 * @param  string  $md5
+	 * @param  int  $time
+	 * @param  string  $new_schedule  The new schedule for the cron job
+	 * @param  int  $new_time  The new execution time
+	 * @param  array  $new_args  The new arguments to pass to the action
 	 *
 	 * @return bool
 	 */
@@ -307,6 +353,5 @@ class Leira_Cron_Jobs_Manager{
 		}
 
 		return $this->add( $new_time, $new_schedule, $job, $new_args );
-
 	}
 }
