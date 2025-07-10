@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This class handle all notifications inside to end user within the plugin.
+ * This class handles all notifications inside to end user within the plugin.
  * The logic is based on BuddyPress core functionality
  *
  * @link       https://github.com/arielhr1987/leira-cron-jobs
@@ -49,12 +49,12 @@ class Leira_Cron_Jobs_Notifications{
 			$messages = $_COOKIE[ $this->cookie ];
 			$messages = @json_decode( $messages, true );
 			if ( is_array( $messages ) ) {
-				$messages = wp_unslash( $messages );
+				$messages       = wp_unslash( $messages );
 				$this->messages = $messages;
 			}
 
 			/**
-			 * Delete the cookie by setting an expiration time before current time
+			 * Delete the cookie by setting an expiration time before the current time
 			 */
 			if ( ! headers_sent() ) {
 				@setcookie( $this->cookie, '', strtotime( "-1 month" ) );
@@ -77,7 +77,8 @@ class Leira_Cron_Jobs_Notifications{
 					 * Sanitize to avoid XSS or any other kind of exploit
 					 */
 					$text = sanitize_text_field( urldecode( $message ) );
-					$html .= sprintf( '<div class="notice notice-%s is-dismissible"><p>%s</p></div>', esc_html( $type ), esc_html( $text ) );
+					$html .= sprintf( '<div class="notice notice-%s is-dismissible"><p>%s</p></div>', esc_html( $type ),
+						esc_html( $text ) );
 				}
 			}
 		}
@@ -88,7 +89,7 @@ class Leira_Cron_Jobs_Notifications{
 	/**
 	 * Get all messages for a given type
 	 *
-	 * @param string $type
+	 * @param  string  $type
 	 *
 	 * @return array The messages
 	 * @since      1.2.3
@@ -103,9 +104,9 @@ class Leira_Cron_Jobs_Notifications{
 	}
 
 	/**
-	 * @param string $type The type of notification to show to the user
+	 * @param  string  $type  The type of notification to show to the user
 	 *                     [error|success|warning|info]
-	 * @param string $msg  The message to show to the user
+	 * @param  string  $msg  The message to show to the user
 	 *
 	 * @return bool If notification was added successfully
 	 * @since      1.2.3
@@ -135,7 +136,7 @@ class Leira_Cron_Jobs_Notifications{
 	/**
 	 * Show an error message
 	 *
-	 * @param string $msg
+	 * @param  string  $msg
 	 *
 	 * @since      1.2.3
 	 */
@@ -146,7 +147,7 @@ class Leira_Cron_Jobs_Notifications{
 	/**
 	 * Show a success message
 	 *
-	 * @param string $msg
+	 * @param  string  $msg
 	 *
 	 * @since      1.2.3
 	 */
@@ -157,7 +158,7 @@ class Leira_Cron_Jobs_Notifications{
 	/**
 	 * Show a warning message
 	 *
-	 * @param string $msg
+	 * @param  string  $msg
 	 *
 	 * @since      1.2.3
 	 */
@@ -168,7 +169,7 @@ class Leira_Cron_Jobs_Notifications{
 	/**
 	 * Show an info message
 	 *
-	 * @param string $msg
+	 * @param  string  $msg
 	 *
 	 * @since      1.2.3
 	 */

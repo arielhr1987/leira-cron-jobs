@@ -1,2 +1,7 @@
 .DS_Store
 .sass-cache
+.idea
+*.code-workspace
+/logs
+/node_modules
+/vendor

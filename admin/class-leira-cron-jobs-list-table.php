@@ -19,7 +19,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 	/**
 	 * Leira_Cron_Jobs_List_Table constructor.
 	 *
-	 * @param array $args
+	 * @param  array  $args
 	 */
 	function __construct( $args = array() ) {
 		global $status, $page;
@@ -46,7 +46,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 	}
 
 	/**
-	 * @param array $item .
+	 * @param  array  $item  .
 	 */
 	public function single_row( $item ) {
 		$class = array( 'cron-job-tr' );
@@ -106,9 +106,9 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 	/**
 	 * Generates and display row actions links for the list table.
 	 *
-	 * @param object $item        The item being acted upon.
-	 * @param string $column_name Current column name.
-	 * @param string $primary     Primary column name.
+	 * @param  object  $item  The item being acted upon.
+	 * @param  string  $column_name  Current column name.
+	 * @param  string  $primary  Primary column name.
 	 *
 	 * @return string The row actions HTML, or an empty string if the current column is the primary column.
 	 */
@@ -148,7 +148,8 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 					/*
 					 * translators: the cronjob name
 					 */
-					esc_attr( sprintf( __( 'Quick edit &#8220;%s&#8221; inline', 'leira-cron-jobs' ), $item['event'] ) ),
+					esc_attr( sprintf( __( 'Quick edit &#8220;%s&#8221; inline', 'leira-cron-jobs' ),
+						$item['event'] ) ),
 					__( 'Quick&nbsp;Edit', 'leira-cron-jobs' )
 				)
 			), $actions );
@@ -160,8 +161,8 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 	/**
 	 * Add default
 	 *
-	 * @param object $item
-	 * @param string $column_name
+	 * @param  object  $item
+	 * @param  string  $column_name
 	 *
 	 * @return mixed|string|void
 	 */
@@ -172,7 +173,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 	/**
 	 * The checkbox column
 	 *
-	 * @param object $item
+	 * @param  object  $item
 	 *
 	 * @return string|void
 	 */
@@ -285,7 +286,8 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 		$h_time_gmt      = date_i18n( $time_format, $time );
 		$h_date_time_gmt = "UTC " . $h_date_gmt . ' ' . $h_time_gmt;
 
-		return sprintf( '<span>%1$s</span><br><abbr title="%2$s" class="date-time-field" data-utc-time="%4$s" data-date-format="%5$s" data-time-format="%6$s">%3$s</abbr>', $h_diff, $h_date_time_gmt, $h_date_time_gmt, $time, $date_format, $time_format );
+		return sprintf( '<span>%1$s</span><br><abbr title="%2$s" class="date-time-field" data-utc-time="%4$s" data-date-format="%5$s" data-time-format="%6$s">%3$s</abbr>',
+			$h_diff, $h_date_time_gmt, $h_date_time_gmt, $time, $date_format, $time_format );
 	}
 
 	/**
@@ -307,7 +309,8 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 
 		$query_arg = '_wpnonce';
 		$action    = 'bulk-' . $this->_args['plural'];
-		$checked   = isset( $_REQUEST[ $query_arg ] ) ? wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST[ $query_arg ] ) ), $action ) : false;
+		$checked   = isset( $_REQUEST[ $query_arg ] ) ? wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST[ $query_arg ] ) ),
+			$action ) : false;
 
 		if ( ! $checked ) {
 			return;
@@ -317,10 +320,10 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 		//Detect when a bulk action is being triggered...
 		switch ( $current_action ) {
 			case 'run':
-				//wp_die( 'Items deleted (or they would be if we had items to delete)!' );
+				//wp_die('Items deleted (or they would be if we had items to delete)!' );
 				break;
 			case 'delete':
-				//wp_die( 'Items deleted (or they would be if we had items to delete)!' );
+				//wp_die('Items deleted (or they would be if we had items to delete)!');
 				break;
 			default:
 
@@ -330,9 +333,9 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 	/**
 	 * Determine if a given string contains a given substring.
 	 *
-	 * @param string       $haystack
-	 * @param string|array $needles
-	 * @param bool         $sensitive Use case sensitive search
+	 * @param  string  $haystack
+	 * @param  string|array  $needles
+	 * @param  bool  $sensitive  Use case-sensitive search
 	 *
 	 * @return bool
 	 */
@@ -401,8 +404,8 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 	/**
 	 * Displays the search box.
 	 *
-	 * @param string $text     The 'submit' button label.
-	 * @param string $input_id ID attribute value for the search input field.
+	 * @param  string  $text  The 'submit' button label.
+	 * @param  string  $input_id  ID attribute value for the search input field.
 	 *
 	 * @since 3.1.0
 	 *
@@ -427,13 +430,13 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 			echo '<input type="hidden" name="page" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ) ) . '" />';
 		}
 		?>
-        <p class="search-box">
-            <label class="screen-reader-text"
-                   for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
-            <input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s"
-                   value="<?php _admin_search_query(); ?>"/>
+		<p class="search-box">
+			<label class="screen-reader-text"
+				   for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s"
+				   value="<?php _admin_search_query(); ?>"/>
 			<?php submit_button( $text, '', '', false, array( 'id' => 'search-submit' ) ); ?>
-        </p>
+		</p>
 		<?php
 	}
 
@@ -443,7 +446,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 	public function prepare_items() {
 
 		/**
-		 * First, lets decide how many records per page to show
+		 * First, let's decide how many records per page to show
 		 */
 		$per_page = $this->get_items_per_page( str_replace( '-', '_', $this->screen->id . '_per_page' ), 999 );
 
@@ -492,13 +495,16 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 		 */
 		function usort_reorder( $a, $b ) {
 			$orderby = ( ! empty( $_REQUEST['orderby'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'event'; //If no sort, default to title
-			$order   = ( ! empty( $_REQUEST['order'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) : 'asc'; //If no order, default to asc
+			$order   = ( ! empty( $_REQUEST['order'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) : 'asc';       //If no order, default to asc
 
 			//$result = strcmp( $a[ $orderby ], $b[ $orderby ] ); //Determine sort order, case sensitive
 			//$result = strcasecmp( $a[ $orderby ], $b[ $orderby ] ); //Determine sort order, case insensitive
-			$result = strnatcasecmp( $a[ $orderby ], $b[ $orderby ] ); //Determine sort order, case insensitive, natural order
+			$result = strnatcasecmp( $a[ $orderby ],
+				$b[ $orderby ] );                                                                                                 //Determine sort order,
+			//case-insensitive,
+			//natural order
 
-			return ( $order === 'asc' ) ? $result : - $result; //Send final sort direction to usort
+			return ( $order === 'asc' ) ? $result : - $result; //Send the final sort direction to usort
 		}
 
 		usort( $data, 'usort_reorder' );
@@ -519,7 +525,7 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 
 
 		/**
-		 * Now we can add the data to the items property, where it can be used by the rest of the class.
+		 * Now we can add the data to the item property, where it can be used by the rest of the class.
 		 */
 		$this->items = $data;
 
@@ -545,50 +551,52 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 		}
 		?>
 
-        <form method="get">
-            <table style="display: none">
-                <tbody id="inlineedit">
-                <tr id="inline-edit" class="inline-edit-row quick-edit-row-page inline-edit-row-page"
-                    style="display: none">
-                    <td colspan="<?php echo esc_html( $this->get_column_count() ); ?>" class="colspanchange">
-                        <div class="inline-edit-wrapper" role="region">
-                            <fieldset class="inline-edit-col-left">
-                                <legend class="inline-edit-legend"><?php esc_html_e( 'Quick Edit' ); ?></legend>
-                                <div class="inline-edit-col">
-                                    <label>
-                                        <span class="title"><?php esc_html_e( 'Args', 'leira-cron-jobs' ); ?></span>
-                                        <span class="input-text-wrap">
+		<form method="get">
+			<table style="display: none">
+				<tbody id="inlineedit">
+				<tr id="inline-edit" class="inline-edit-row quick-edit-row-page inline-edit-row-page"
+					style="display: none">
+					<td colspan="<?php echo esc_html( $this->get_column_count() ); ?>" class="colspanchange">
+						<div class="inline-edit-wrapper" role="region">
+							<fieldset class="inline-edit-col-left">
+								<legend class="inline-edit-legend"><?php esc_html_e( 'Quick Edit' ); ?></legend>
+								<div class="inline-edit-col">
+									<label>
+										<span class="title"><?php esc_html_e( 'Args', 'leira-cron-jobs' ); ?></span>
+										<span class="input-text-wrap">
                                         <input class="ptitle" type="text" name="args" value=""/>
                                         <p class="description">
                                             <small>
-									        <?php esc_html_e( 'Use a JSON encoded array, e.g. [10] , ["value"] or [10,"mixed","values"]', 'leira-cron-jobs' ) ?>
+									        <?php esc_html_e( 'Use a JSON encoded array, e.g. [10] , ["value"] or [10,"mixed","values"]',
+												'leira-cron-jobs' ) ?>
                                         </small></p>
                                     </span>
-                                    </label>
-                                </div>
-                            </fieldset>
-                            <fieldset class="inline-edit-col-right">
-                                <div class="inline-edit-col">
-                                    <input type="hidden" name="event" value=""/>
-                                    <input type="hidden" name="_action" value=""/>
-                                    <input type="hidden" name="md5" value=""/>
-                                    <input type="hidden" name="time" value=""/>
-                                    <label>
-                                        <span class="title"><?php esc_html_e( 'Schedule', 'leira-cron-jobs' ); ?></span>
-                                        <span class="input-text-wrap">
+									</label>
+								</div>
+							</fieldset>
+							<fieldset class="inline-edit-col-right">
+								<div class="inline-edit-col">
+									<input type="hidden" name="event" value=""/>
+									<input type="hidden" name="_action" value=""/>
+									<input type="hidden" name="md5" value=""/>
+									<input type="hidden" name="time" value=""/>
+									<label>
+										<span class="title"><?php esc_html_e( 'Schedule', 'leira-cron-jobs' ); ?></span>
+										<span class="input-text-wrap">
                                         <?php echo $this->get_dropdown_schedules(); ?>
                                     </span>
-                                    </label>
-                                    <fieldset class="inline-edit-date">
-                                        <legend>
-                                            <span class="title"><?php esc_html_e( 'Execution', 'leira-cron-jobs' ); ?></span>
-                                        </legend>
+									</label>
+									<fieldset class="inline-edit-date">
+										<legend>
+											<span class="title"><?php esc_html_e( 'Execution',
+													'leira-cron-jobs' ); ?></span>
+										</legend>
 										<?php echo $this->get_datetime_editor() ?>
-                                    </fieldset>
-                                    <input type="hidden" name="offset" value=""/>
-                                    <br class="clear"/>
-                                </div>
-                            </fieldset>
+									</fieldset>
+									<input type="hidden" name="offset" value=""/>
+									<br class="clear"/>
+								</div>
+							</fieldset>
 							<?php
 
 							$core_columns = array(
@@ -612,24 +620,24 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 
 							?>
 
-                            <div class="inline-edit-save submit">
-                                <button type="button"
-                                        class="cancel button alignleft"><?php esc_html_e( 'Cancel' ); ?></button>
-                                <button type="button"
-                                        class="save button button-primary alignright"><?php esc_html_e( 'Save' ); ?></button>
-                                <span class="spinner"></span>
+							<div class="inline-edit-save submit">
+								<button type="button"
+										class="cancel button alignleft"><?php esc_html_e( 'Cancel' ); ?></button>
+								<button type="button"
+										class="save button button-primary alignright"><?php esc_html_e( 'Save' ); ?></button>
+								<span class="spinner"></span>
 								<?php wp_nonce_field( 'cronjobinlineeditnonce', '_inline_edit', false ); ?>
-                                <br class="clear"/>
-                                <div class="notice notice-error notice-alt inline hidden">
-                                    <p class="error"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </form>
+								<br class="clear"/>
+								<div class="notice notice-error notice-alt inline hidden">
+									<p class="error"></p>
+								</div>
+							</div>
+						</div>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</form>
 		<?php
 	}
 
@@ -666,8 +674,8 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 	/**
 	 * Print out HTML form date elements for editing post or comment publish date.
 	 *
-	 * @param int        $tab_index The tabindex attribute to add. Default 0.
-	 * @param int|bool   $multi     Optional. Whether the additional fields and buttons should be added. Default
+	 * @param  int  $tab_index  The tabindex attribute to add. Default 0.
+	 * @param  int|bool  $multi  Optional. Whether the additional fields and buttons should be added. Default
 	 *                              0|false.
 	 *
 	 * @return string
@@ -695,7 +703,8 @@ class Leira_Cron_Jobs_List_Table extends WP_List_Table{
 			//$monthnum  = zeroise( $i, 2 );
 			$monthnum  = $i;
 			$monthtext = $wp_locale->get_month_abbrev( $wp_locale->get_month( $i ) );
-			$month     .= "\t\t\t" . '<option value="' . $monthnum . '" data-text="' . $monthtext . '" ' . selected( $monthnum, $mm, false ) . '>';
+			$month     .= "\t\t\t" . '<option value="' . $monthnum . '" data-text="' . $monthtext . '" ' . selected( $monthnum,
+					$mm, false ) . '>';
 			/* translators: 1: month number (01, 02, etc.), 2: month abbreviation */
 			$month .= sprintf( esc_html__( '%1$s-%2$s' ), $monthnum, $monthtext ) . "</option>\n";
 		}

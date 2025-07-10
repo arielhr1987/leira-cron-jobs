@@ -3,10 +3,9 @@
 /**
  * The plugin bootstrap file
  *
- * This file is read by WordPress to generate the plugin information in the plugin
- * admin area. This file also includes all of the dependencies used by the plugin,
- * registers the activation and deactivation functions, and defines a function
- * that starts the plugin.
+ * WordPress reads this file to generate the plugin information in the plugin admin area.
+ * This file also includes all the dependencies used by the plugin,
+ * registers the activation and deactivation functions, and defines a function that starts the plugin.
  *
  * @link              https://github.com/arielhr1987
  * @since             1.0.0
@@ -15,8 +14,8 @@
  * @wordpress-plugin
  * Plugin Name:       Cron Jobs
  * Plugin URI:        https://github.com/arielhr1987/leira-cron-jobs
- * Description:       Cron Jobs is a simple, but powerful plugin that will help you to manage your site cron jobs easily.
- * Version:           1.2.10
+ * Description: Cron Jobs is a simple but powerful plugin that will help you to manage your site cron jobs easily.
+ * Version:           1.2.11
  * Author:            Ariel
  * Author URI:        https://leira.dev
  * License:           GPL-2.0+
@@ -35,7 +34,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'LEIRA_CRON_JOBS_VERSION', '1.2.10' );
+define( 'LEIRA_CRON_JOBS_VERSION', '1.2.11' );
 
 /**
  * The code that runs during plugin activation.
