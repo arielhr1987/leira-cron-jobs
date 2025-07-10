@@ -56,6 +56,10 @@ Currently, no. Managing schedules is not yet supported, but it's a planned featu
 
 == Changelog ==
 
+= 1.2.11 =
+* Improved the plugin's compatibility with WordPress 6.8
+* New method to handle running cron jobs, ensuring better reliability
+
 = 1.2.10 =
 * Verified compatibility with WordPress 6.6
 * Fixed security issue reported by Wordfence
