@@ -1,6 +1,6 @@
 {
   "name": "leira-cron-jobs",
-  "version": "1.2.11",
+  "version": "1.2.12",
   "description": "A Wordpress plugin to manage cron jobs.",
   "author": "Ariel",
   "license": "ISC",
